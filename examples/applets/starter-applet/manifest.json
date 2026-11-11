@@ -1,0 +1,23 @@
+{
+  "AppletId": "starter-applet",
+  "DisplayName": "Starter applet",
+  "Description": "Copyable 600 by 400 applet using the bundled applets' uniform fitting pattern.",
+  "Author": "MATRIC developer example",
+  "VersionMajor": 1,
+  "VersionMinor": 0,
+  "AppletParams": [
+    { "Name": "Caption", "DisplayName": "Caption", "ParamType": "string", "Default": "Your applet" },
+    { "Name": "VariableToDisplay", "DisplayName": "Variable to display", "ParamType": "variable", "Default": "hobby_temperature" },
+    { "Name": "Padding", "DisplayName": "Outer padding in pixels (0–256)", "ParamType": "number", "Default": 12 },
+    { "Name": "AccentColor", "DisplayName": "Accent color", "ParamType": "color", "Default": "#91e3cb" },
+    { "Name": "BackgroundColor", "DisplayName": "Background color", "ParamType": "color", "Default": "#101c28" }
+  ],
+  "EventsDefinition": [
+    {
+      "Name": "activate",
+      "DisplayName": "Activate",
+      "Description": "Run the Text action configured for this container.",
+      "AllowedActions": ["ActionText"]
+    }
+  ]
+}

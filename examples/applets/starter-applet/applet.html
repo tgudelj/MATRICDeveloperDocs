@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Starter applet</title>
+  <link rel="stylesheet" href="applet.css">
+  <script src="applet.js" defer></script>
+</head>
+<body>
+  <main id="design" aria-label="Starter applet">
+    <header>
+      <p class="eyebrow">MATRIC APPLET</p>
+      <h1 id="caption">Your applet</h1>
+    </header>
+    <section class="reading" aria-label="Server variable">
+      <p id="variable-name">hobby_temperature</p>
+      <output id="value" aria-live="polite">Waiting for value</output>
+    </section>
+    <button id="activate" type="button">Activate</button>
+    <p id="status" role="status">Bind Activate to a Text action in MATRIC.</p>
+  </main>
+</body>
+</html>

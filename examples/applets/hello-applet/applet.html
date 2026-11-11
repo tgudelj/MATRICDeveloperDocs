@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello applet</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body { padding: 12px; background: #14293b; color: #eef6ff; font: 18px system-ui, sans-serif; }
+    main { display: grid; gap: 12px; }
+    output { display: block; overflow-wrap: anywhere; font-size: 1.5em; }
+    button { min-height: 48px; padding: 10px; border: 0; border-radius: 8px;
+      background: #91e3cb; color: #112c28; font: inherit; touch-action: manipulation; }
+    p { margin: 0; font-size: 0.8em; color: #b5c9da; }
+  </style>
+</head>
+<body>
+  <main>
+    <p id="label">Server variable</p>
+    <output id="value" aria-live="polite">Waiting for value</output>
+    <button id="send" type="button">Send text</button>
+  </main>
+  <script>
+    const controlId = location.hash.slice(1);
+    const output = document.getElementById('value');
+    const label = document.getElementById('label');
+    let params = {}, variables = {}, parentOrigin = '*';
+
+    function isObject(value) {
+      return value !== null && typeof value === 'object' && !Array.isArray(value);
+    }
+    function render() {
+      const name = typeof params.VariableToDisplay === 'string' ? params.VariableToDisplay : '';
+      const value = variables[name];
+      label.textContent = name || 'Server variable';
+      output.textContent = value == null ? 'Waiting for value' : String(value);
+    }
+    function emitEvent(name, data) {
+      if (!controlId || parent === window) return;
+      parent.postMessage({ messageId: 'cce-' + controlId,
+        payload: { EventName: name, Data: data } }, parentOrigin);
+    }
+    window.addEventListener('message', event => {
+      if (event.source !== parent || !isObject(event.data) || !isObject(event.data.payload)) return;
+      if (event.origin && event.origin !== 'null') parentOrigin = event.origin;
+      if (event.data.messageId === 'PARAMSUPDATE') params = event.data.payload;
+      else if (event.data.messageId === 'VARIABLESUPDATE') variables = event.data.payload;
+      else return;
+      render();
+    });
+    // Text is not a held-input action. A click is sufficient for this example.
+    document.getElementById('send').addEventListener('click', () => emitEvent('activate', null));
+    emitEvent('reqvariables', null);
+  </script>
+</body>
+</html>

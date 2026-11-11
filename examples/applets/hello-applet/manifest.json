@@ -1,0 +1,24 @@
+{
+  "AppletId": "hello-applet",
+  "DisplayName": "Hello applet",
+  "Description": "Display a server variable and invoke a configured Text action.",
+  "Author": "MATRIC developer example",
+  "VersionMajor": 1,
+  "VersionMinor": 0,
+  "AppletParams": [
+    {
+      "Name": "VariableToDisplay",
+      "DisplayName": "Variable to display",
+      "ParamType": "variable",
+      "Default": "hobby_temperature"
+    }
+  ],
+  "EventsDefinition": [
+    {
+      "Name": "activate",
+      "DisplayName": "Activate",
+      "Description": "Run the Text action configured for this container.",
+      "AllowedActions": ["ActionText"]
+    }
+  ]
+}

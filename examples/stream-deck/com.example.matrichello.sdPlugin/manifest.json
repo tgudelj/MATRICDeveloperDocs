@@ -1,0 +1,26 @@
+{
+  "UUID": "com.example.matrichello",
+  "Name": "Hello plugin",
+  "Description": "A minimal MATRIC Stream Deck protocol example that counts presses.",
+  "Author": "MATRIC developer example",
+  "Version": "1.0.0.0",
+  "SDKVersion": 2,
+  "Software": { "MinimumVersion": "7.1" },
+  "OS": [{ "Platform": "windows", "MinimumVersion": "10" }],
+  "Nodejs": { "Version": "24" },
+  "CodePath": "plugin.mjs",
+  "Icon": "icon",
+  "Category": "Developer examples",
+  "CategoryIcon": "icon",
+  "Actions": [
+    {
+      "UUID": "com.example.matrichello.count",
+      "Name": "Count presses",
+      "Tooltip": "Count presses in memory and update the control title.",
+      "Icon": "icon",
+      "Controllers": ["Keypad"],
+      "SupportedInMultiActions": false,
+      "States": [{ "Image": "icon", "Title": "Count 0", "ShowTitle": true }]
+    }
+  ]
+}

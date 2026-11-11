@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="520" viewBox="0 0 1100 520" role="img" aria-labelledby="title desc">
+  <title id="title">Choose where your extension runs</title>
+  <desc id="desc">UDP integrations and Stream Deck plugin backends run on the Windows PC. Custom applets run in a client's deck. MATRIC connects these paths.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="#526c82"/></marker></defs>
+  <rect width="1100" height="520" rx="20" fill="#f4f7fb"/>
+  <g font-family="Arial, sans-serif" fill="#14293b">
+    <text x="36" y="48" font-size="26" font-weight="700">Three ways to extend MATRIC</text>
+    <rect x="30" y="78" width="680" height="400" rx="16" fill="#e5edf7" stroke="#b2c4d8"/>
+    <text x="52" y="112" font-size="18" font-weight="700">WINDOWS PC</text>
+    <rect x="52" y="140" width="265" height="125" rx="12" fill="white" stroke="#39826f" stroke-width="2"/>
+    <text x="72" y="172" font-size="21" font-weight="700">UDP integration</text>
+    <text x="72" y="201" font-size="17">Your Python, C# or other app</text>
+    <text x="72" y="233" font-size="16" fill="#456475">Telemetry and automation</text>
+    <rect x="52" y="308" width="265" height="140" rx="12" fill="white" stroke="#8b6baa" stroke-width="2"/>
+    <text x="72" y="340" font-size="21" font-weight="700">Stream Deck plugin</text>
+    <text x="72" y="369" font-size="17">Backend and configuration</text>
+    <text x="72" y="403" font-size="16" fill="#72528b">Experimental compatibility</text>
+    <text x="72" y="427" font-size="16" fill="#72528b">Supported protocol subset</text>
+    <rect x="432" y="218" width="245" height="140" rx="12" fill="#14293b"/>
+    <text x="458" y="262" fill="white" font-size="23" font-weight="700">MATRIC Server</text>
+    <text x="458" y="294" fill="#c7dae9" font-size="17">Decks and variables</text>
+    <text x="458" y="323" fill="#c7dae9" font-size="17">Desktop actions</text>
+    <rect x="762" y="78" width="308" height="400" rx="16" fill="#e4f2ed" stroke="#a6cbbc"/>
+    <text x="784" y="112" font-size="18" font-weight="700">CLIENT DEVICE</text>
+    <text x="784" y="146" font-size="17">Phone, tablet or supported client</text>
+    <rect x="784" y="218" width="264" height="140" rx="12" fill="white" stroke="#39826f" stroke-width="2"/>
+    <text x="806" y="258" font-size="22" font-weight="700">Custom applet</text>
+    <text x="806" y="290" font-size="17">HTML, CSS and JavaScript</text>
+    <text x="806" y="323" font-size="16" fill="#456475">Your interface inside a deck</text>
+    <text x="784" y="410" font-size="17">Built-in controls also use</text>
+    <text x="784" y="437" font-size="17">server variables and actions.</text>
+  </g>
+  <g fill="none" stroke="#526c82" stroke-width="2.5" marker-start="url(#arrow)" marker-end="url(#arrow)">
+    <path d="M326 200H380V247H422"/>
+    <path d="M326 378H380V328H422"/>
+    <path d="M687 286H774"/>
+  </g>
+</svg>

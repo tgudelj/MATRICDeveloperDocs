@@ -1,0 +1,6 @@
+{
+  "name": "matric-developer-example-checks",
+  "private": true,
+  "scripts": { "test": "node --test starter-applet.test.cjs" },
+  "devDependencies": { "playwright": "1.65.0" }
+}

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="420" viewBox="0 0 1100 420" role="img" aria-labelledby="title desc">
+  <title id="title">UDP commands and replies</title>
+  <desc id="desc">The integration sends from a fixed port to MATRIC at 127.0.0.1 port 5300. MATRIC sends replies and notifications back to that integration port from separate sockets. MATRIC forwards updates to connected clients.</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10" fill="#39826f"/></marker></defs>
+  <rect width="1100" height="420" rx="20" fill="#f4f7fb"/>
+  <g font-family="Arial, sans-serif" fill="#14293b">
+    <text x="36" y="48" font-size="26" font-weight="700">One socket for sending and receiving</text>
+    <rect x="28" y="78" width="778" height="306" rx="16" fill="#e5edf7" stroke="#b2c4d8"/>
+    <text x="50" y="112" font-size="18" font-weight="700">WINDOWS PC · LOCALHOST</text>
+    <rect x="50" y="158" width="215" height="130" rx="12" fill="white"/>
+    <text x="70" y="196" font-size="21" font-weight="700">Your integration</text>
+    <text x="70" y="229" font-size="17">127.0.0.1:50301</text>
+    <text x="70" y="260" font-size="16">Example fixed listen port</text>
+    <rect x="545" y="158" width="235" height="130" rx="12" fill="#14293b"/>
+    <text x="565" y="196" font-size="21" font-weight="700" fill="white">MATRIC Server</text>
+    <text x="565" y="229" font-size="17" fill="#c7dae9">127.0.0.1:5300</text>
+    <text x="565" y="260" font-size="16" fill="#c7dae9">Default API destination</text>
+    <text x="302" y="173" font-size="17">UTF-8 JSON command</text>
+    <text x="294" y="285" font-size="17">Replies and notifications</text>
+    <text x="50" y="343" font-size="17">Reply source ports vary. Receive on the same bound integration socket.</text>
+    <rect x="858" y="158" width="214" height="130" rx="12" fill="#e4f2ed" stroke="#a6cbbc"/>
+    <text x="881" y="196" font-size="21" font-weight="700">MATRIC client</text>
+    <text x="881" y="229" font-size="17">Connected device</text>
+    <text x="881" y="260" font-size="16">Deck controls</text>
+  </g>
+  <g fill="none" stroke="#39826f" stroke-width="2.5" marker-end="url(#arrow)">
+    <path d="M275 197H535"/><path d="M535 252H275"/><path d="M790 222H848"/>
+  </g>
+</svg>

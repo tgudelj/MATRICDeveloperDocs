@@ -1,0 +1,78 @@
+{
+  "title": "MATRIC developers",
+  "entry": "index.md",
+  "navigation": [
+    {
+      "title": "Extend MATRIC",
+      "path": "index.md"
+    },
+    {
+      "title": "UDP Integration API",
+      "pages": [
+        {
+          "title": "Your first UDP integration",
+          "path": "udp/quickstart.md"
+        },
+        {
+          "title": "UDP API reference",
+          "path": "udp/reference.md"
+        }
+      ]
+    },
+    {
+      "title": "Custom applets",
+      "pages": [
+        {
+          "title": "Copy and customize the starter applet",
+          "path": "applets/starter.md"
+        },
+        {
+          "title": "Your first custom applet",
+          "path": "applets/quickstart.md"
+        },
+        {
+          "title": "Size and lay out an applet",
+          "path": "applets/layout.md"
+        },
+        {
+          "title": "Custom applet reference",
+          "path": "applets/reference.md"
+        }
+      ]
+    },
+    {
+      "title": "Stream Deck compatibility",
+      "pages": [
+        {
+          "title": "Stream Deck plugin compatibility",
+          "path": "stream-deck/guide.md"
+        }
+      ]
+    },
+    {
+      "title": "Recipes",
+      "pages": [
+        {
+          "title": "Display external data in an applet",
+          "path": "recipes/live-status.md"
+        }
+      ]
+    },
+    {
+      "title": "Share and troubleshoot extensions",
+      "path": "troubleshooting.md"
+    }
+  ],
+  "staticDirectories": [
+    "assets",
+    "examples"
+  ],
+  "maintainerFiles": [
+    "README.md",
+    "CONTRIBUTING.md",
+    "VALIDATION.md",
+    "LICENSE",
+    "tests",
+    "tools"
+  ]
+}
