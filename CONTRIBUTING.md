@@ -46,7 +46,7 @@ The tests use isolated pages and a temporary local server. They check layout, re
 
 ## Build and preview the portal
 
-The [developer portal](https://tgudelj.github.io/MATRICDeveloperDocs/) is built with [Zensical](https://zensical.org/) and published to GitHub Pages. With Python 3.13 installed, run from the repository root:
+The [developer portal](https://developers.matricapp.com/) is built with [Zensical](https://zensical.org/) and published to GitHub Pages. With Python 3.13 installed, run from the repository root:
 
 ```sh
 python -m venv .venv
@@ -61,7 +61,7 @@ python tools/check-portal.py
 python tools/build-portal.py --serve
 ```
 
-After building, the portal's browser checks can be run with `npm run test:portal --prefix tests`, using the same Playwright installation as the starter tests. They exercise the GitHub project URL prefix, search, navigation, anchors, downloads and the mobile menu.
+After building, the portal's browser checks can be run with `npm run test:portal --prefix tests`, using the same Playwright installation as the starter tests. They exercise navigation from the custom domain root, search, anchors, downloads and the mobile menu.
 
 Open the local URL printed by the preview server. Stop and rerun the preview command after editing the original Markdown or portal configuration, so the staged content is refreshed.
 
@@ -70,3 +70,19 @@ Open the local URL printed by the preview server. Stop and rerun the preview com
 The **Developer portal** GitHub Actions workflow builds and validates pushes and pull requests. Successful pushes to `main` deploy to Pages; pull requests only validate. In repository **Settings > Pages**, the publishing source is **GitHub Actions**. This follows [GitHub's custom Pages workflow](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
 Reader content uses ordinary Markdown with tables, fenced code and SVG/PNG images. `tests/` and `tools/` support maintenance and need not appear in reader navigation. Keep this repository as the editable source so the repository and any generated portal stay consistent.
+
+## Portal domain
+
+The public URL is **https://developers.matricapp.com/**. Set `site_url` in `mkdocs.yml` to this address, including the trailing slash. Navigation and downloads are served from `/`.
+
+In repository **Settings > Pages**, keep **GitHub Actions** as the source and set **Custom domain** to `developers.matricapp.com`. This setting is required for Actions deployments; a repository `CNAME` file is not used by this publishing method.
+
+In the DNS zone for `matricapp.com`, use this explicit record:
+
+| Type | Name / host | Target / value | TTL |
+| --- | --- | --- | --- |
+| CNAME | `developers` | `tgudelj.github.io` | `300` seconds or provider default |
+
+Some DNS providers require the full name `developers.matricapp.com` and a trailing dot on the target (`tgudelj.github.io.`). The target is a hostname without `https://` or a repository path. Replace any conflicting record for this exact host. If the provider offers proxying, use DNS-only while GitHub validates the domain and issues its HTTPS certificate.
+
+After DNS resolves to GitHub, confirm the check in **Settings > Pages** and enable **Enforce HTTPS** when available. GitHub notes that DNS propagation and HTTPS availability can each take up to 24 hours. See [GitHub's custom-domain setup guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site).

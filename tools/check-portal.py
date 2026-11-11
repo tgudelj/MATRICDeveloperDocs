@@ -8,7 +8,6 @@ from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "_site"
-BASE = "/MATRICDeveloperDocs/"
 
 
 class Page(HTMLParser):
@@ -40,10 +39,8 @@ def main():
             if url.scheme or url.netloc:
                 continue
             location = unquote(url.path)
-            if location.startswith(BASE):
-                target = SITE / location[len(BASE):]
-            elif location.startswith("/"):
-                raise AssertionError("Link escapes the GitHub project path: " + link)
+            if location.startswith("/"):
+                target = SITE / location.lstrip("/")
             else:
                 target = source.parent / location if location else source
             target = target.resolve()

@@ -8,7 +8,7 @@ const { chromium } = require('playwright');
 
 const root = path.resolve(__dirname, '..');
 const site = path.join(root, '_site');
-const prefix = '/MATRICDeveloperDocs/';
+const prefix = '/';
 let server, browser, origin;
 
 test.before(async () => {
@@ -52,7 +52,7 @@ async function screenshot(page, name) {
   await page.screenshot({ path: path.join(process.env.MATRIC_DOCS_SCREENSHOTS, name + '.png'), fullPage: true });
 }
 
-test('project-path navigation, illustrations and section links work', async t => {
+test('custom-domain navigation, illustrations and section links work', async t => {
   const page = await open(t);
   assert.equal(await page.title(), 'Extend MATRIC - MATRIC developers');
   assert.ok(await page.locator('img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)));
