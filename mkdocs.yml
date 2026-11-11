@@ -9,8 +9,8 @@ theme:
   variant: modern
   language: en
   font: false
-  logo: assets/portal-logo.svg
-  favicon: assets/portal-logo.svg
+  logo: assets/matric-icon.png
+  favicon: assets/matric.ico
   features:
     - navigation.sections
     - navigation.tracking

@@ -55,7 +55,6 @@ def main():
     styles = content / "assets" / "stylesheets"
     styles.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / "portal" / "styles.css", styles / "portal.css")
-    shutil.copyfile(ROOT / "portal" / "logo.svg", content / "assets" / "portal-logo.svg")
     shutil.copyfile(ROOT / "portal" / "downloads.js", content / "assets" / "downloads.js")
     config["docs_dir"] = ".portal/content"
     config["site_dir"] = "_site"
