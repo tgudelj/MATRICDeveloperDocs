@@ -4,6 +4,8 @@ Build your own MATRIC integrations and applets, or use supported Stream Deck plu
 
 Start with [Extend MATRIC](index.md) to choose the right extension path.
 
+**[Read the developer portal](https://tgudelj.github.io/MATRICDeveloperDocs/)** for sidebar navigation, full-text search, section links and example downloads. The Markdown files here remain the editable source.
+
 ## Find your starting point
 
 | You want to… | Read |

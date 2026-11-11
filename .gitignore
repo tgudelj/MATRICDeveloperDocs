@@ -4,3 +4,8 @@ __pycache__/
 *.pyc
 test-results/
 playwright-report/
+.portal/
+_site/
+.venv/
+.portal.yml
+.cache/

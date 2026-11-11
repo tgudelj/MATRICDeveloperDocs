@@ -44,8 +44,29 @@ On Linux, Playwright may also require its system dependencies; use `npx playwrig
 
 The tests use isolated pages and a temporary local server. They check layout, real pointer input through scaling, variable updates, separate instances and resize/resume behavior. They do not run Windows actions or access installed MATRIC applets/decks. Add meaningful checks when an example introduces new behavior.
 
-## Use the content in a portal
+## Build and preview the portal
 
-`portal.json` supplies ordered titles and paths. Keep relative file links working when generating routes, serve `assets/` as images, and offer the original files under `examples/` as downloads. Preserve the `.sdPlugin` directory name and contents.
+The [developer portal](https://tgudelj.github.io/MATRICDeveloperDocs/) is built with [Zensical](https://zensical.org/) and published to GitHub Pages. With Python 3.13 installed, run from the repository root:
+
+```sh
+python -m venv .venv
+```
+
+Activate that environment (`source .venv/bin/activate` on macOS/Linux, or `.venv\Scripts\Activate.ps1` in PowerShell), then run:
+
+```sh
+python -m pip install -r requirements-docs.txt
+python tools/build-portal.py
+python tools/check-portal.py
+python tools/build-portal.py --serve
+```
+
+After building, the portal's browser checks can be run with `npm run test:portal --prefix tests`, using the same Playwright installation as the starter tests. They exercise the GitHub project URL prefix, search, navigation, anchors, downloads and the mobile menu.
+
+Open the local URL printed by the preview server. Stop and rerun the preview command after editing the original Markdown or portal configuration, so the staged content is refreshed.
+
+`portal.json` is the source of page titles and sidebar ordering. `mkdocs.yml` controls the theme and site settings; `portal/` holds the small visual customizations. The build stages only reader pages and public resources, rewrites Markdown links, and preserves the downloadable example files. Generated content stays under `.portal/` and `_site/` and is ignored by Git.
+
+The **Developer portal** GitHub Actions workflow builds and validates pushes and pull requests. Successful pushes to `main` deploy to Pages; pull requests only validate. In repository **Settings > Pages**, the publishing source is **GitHub Actions**. This follows [GitHub's custom Pages workflow](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
 Reader content uses ordinary Markdown with tables, fenced code and SVG/PNG images. `tests/` and `tools/` support maintenance and need not appear in reader navigation. Keep this repository as the editable source so the repository and any generated portal stay consistent.

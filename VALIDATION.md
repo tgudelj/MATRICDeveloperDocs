@@ -9,6 +9,7 @@ The guides were prepared for MATRIC 2.9.18 on 11 November 2026. This identifies 
 - Python example against an isolated UDP responder, including nested replies and notifications sent from a separate source port.
 - Applet messages and plugin registration/lifecycle behavior with simulated MATRIC messages.
 - Eight repeatable starter browser tests: standalone preview; proportional fitting and real pointer clicks; both parameter/variable arrival orders; padding and malformed messages; instance isolation; resize/resume retention; and disabled editor interaction.
+- Four portal browser checks: navigation and section anchors under the GitHub project URL; full-text search and code-copy button availability; unchanged package/source downloads; and mobile navigation without page overflow. The publishing workflow also validates generated page links, anchors and search data before deployment.
 
 The starter browser checks ran in a Chromium-based browser on macOS. They cover wide, square, tall and tiny viewports, zero/false/missing values and state retention without document reload.
 

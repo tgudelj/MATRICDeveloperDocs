@@ -1,0 +1,55 @@
+site_name: MATRIC developers
+site_description: Practical guides and starter examples for extending MATRIC.
+site_url: https://tgudelj.github.io/MATRICDeveloperDocs/
+repo_url: https://github.com/tgudelj/MATRICDeveloperDocs
+repo_name: MATRICDeveloperDocs
+edit_uri: edit/main/
+use_directory_urls: true
+theme:
+  variant: modern
+  language: en
+  font: false
+  logo: assets/portal-logo.svg
+  favicon: assets/portal-logo.svg
+  features:
+    - navigation.sections
+    - navigation.tracking
+    - navigation.top
+    - navigation.footer
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+    - content.action.view
+  palette:
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+extra_css:
+  - assets/stylesheets/portal.css
+extra_javascript:
+  - assets/downloads.js
+extra:
+  generator: false
+copyright: Documentation and examples available under the MIT License.

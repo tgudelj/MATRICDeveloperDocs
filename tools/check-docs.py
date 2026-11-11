@@ -9,6 +9,7 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
+GENERATED = {"node_modules", ".portal", "_site", ".venv", ".git", ".cache"}
 
 
 def heading_ids(text):
@@ -28,7 +29,7 @@ def heading_ids(text):
 def main():
     """Validate the publication files without network access or MATRIC installation."""
     for page in ROOT.rglob("*.md"):
-        if "node_modules" in page.parts:
+        if GENERATED.intersection(page.relative_to(ROOT).parts):
             continue
         text = page.read_text(encoding="utf-8")
         assert text.count("```") % 2 == 0, f"Unclosed code fence: {page.relative_to(ROOT)}"
@@ -46,7 +47,7 @@ def main():
             json.loads(example)
 
     for file in ROOT.rglob("*.json"):
-        if "node_modules" not in file.parts:
+        if not GENERATED.intersection(file.relative_to(ROOT).parts):
             json.loads(file.read_text(encoding="utf-8"))
 
     portal = json.loads((ROOT / "portal.json").read_text(encoding="utf-8"))
