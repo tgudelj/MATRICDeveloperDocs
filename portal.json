@@ -46,6 +46,10 @@
         {
           "title": "Stream Deck plugin compatibility",
           "path": "stream-deck/guide.md"
+        },
+        {
+          "title": "Plugin touch strip and rotary",
+          "path": "stream-deck/encoder-applet.md"
         }
       ]
     },

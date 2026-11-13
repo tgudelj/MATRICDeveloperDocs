@@ -81,7 +81,15 @@ def main():
         assert archive.testzip() is None
         for name in names:
             assert archive.read(name) == (starter / name).read_bytes(), f"Rebuild starter package: {name}"
-    print("Passed: local links and anchors, JSON examples, navigation, manifests and starter package")
+    encoder = applets / "matric-plugin-encoder"
+    with zipfile.ZipFile(applets / "matric-plugin-encoder.mapl") as archive:
+        names = ["manifest.json", "applet.html", "applet.js", "encoder.js"]
+        assert sorted(archive.namelist()) == sorted(names)
+        assert archive.testzip() is None
+        for name in names:
+            assert archive.read(name) == (encoder / name).read_bytes(), f"Rebuild encoder package: {name}"
+        assert "../" not in archive.read("applet.html").decode("utf-8")
+    print("Passed: local links and anchors, JSON examples, navigation, manifests and applet packages")
 
 
 if __name__ == "__main__":

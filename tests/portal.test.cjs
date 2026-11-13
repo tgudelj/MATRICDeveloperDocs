@@ -11,6 +11,15 @@ const site = path.join(root, '_site');
 const prefix = '/';
 let server, browser, origin;
 
+test('encoder guide and self-contained applet download are published',async t=>{
+  const page=await open(t,'stream-deck/encoder-applet/');
+  await page.locator('main h1').filter({hasText:'Plugin touch strip and rotary'}).waitFor();
+  const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('link',{name:'Download the applet',exact:true}).click()]);
+  const downloaded=await fs.promises.readFile(await download.path());
+  const source=fs.readFileSync(path.join(root,'examples/applets/matric-plugin-encoder.mapl'));
+  assert.deepEqual(downloaded,source);
+});
+
 test.before(async () => {
   assert.ok(fs.existsSync(path.join(site, 'index.html')), 'Build the portal before running browser checks');
   server = http.createServer((request, response) => {

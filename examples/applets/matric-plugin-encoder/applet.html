@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Plugin touch strip + rotary</title>
+  <style>
+    html,body { width:100%; height:100%; margin:0; overflow:hidden; background:#181818; color:#eee; }
+    body { font-family:Arial,sans-serif; touch-action:none; user-select:none; }
+    #app { position:relative; width:100%; height:100%; }
+    #surface { position:absolute; }
+    canvas { display:block; width:100%; height:100%; touch-action:none; }
+    #message { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; color:#ccc; font-size:13px; padding:8px; pointer-events:none; }
+    #message[hidden] { display:none; }
+    #rotary { position:absolute; }
+    #dial { position:relative; width:100%; height:100%; border-radius:50%; touch-action:none; cursor:grab; }
+    #knob-face { position:absolute; inset:14.644661%; border-radius:50%; background:repeating-conic-gradient(#383838 0deg 3deg,#202020 3deg 12deg); box-shadow:inset 0 0 0 2px #505050,0 2px 5px #000; pointer-events:none; }
+    #knob-face::before { content:''; position:absolute; inset:12%; border-radius:50%; background:radial-gradient(circle at 40% 30%,#6b6b6b,#292929); box-shadow:0 0 0 1px #111; }
+    #knob-face::after { content:''; position:absolute; width:3%; height:11%; top:15%; left:48.5%; border-radius:2px; background:#eee; transform-origin:50% 318%; transform:rotate(var(--angle,0deg)); }
+    #knob-image { position:absolute; width:70.710678%; height:70.710678%; left:50%; top:50%; object-fit:contain; transform:translate(-50%,-50%) rotate(var(--angle,0deg)); pointer-events:none; }
+    #center { position:absolute; inset:37.3%; padding:0; border:1px solid #777; border-radius:50%; background:radial-gradient(circle at 40% 30%,#555,#303030); color:#eee; cursor:pointer; touch-action:none; }
+    #center[aria-pressed=true] { background:#087b81; box-shadow:inset 0 2px 4px #111; }
+    #dial:focus-visible,#center:focus-visible { outline:2px solid #00c8ce; outline-offset:2px; }
+    body.disabled #dial { opacity:.45; cursor:default; }
+    #dial.custom-image #knob-face { visibility:hidden; }
+    #dial.custom-image #center { border-color:transparent; background:transparent; box-shadow:none; }
+  </style>
+</head>
+<body class="disabled">
+  <div id="app">
+    <div id="surface"><canvas aria-label="Plugin touch strip"></canvas><div id="message">Choose a plugin action in the editor.</div></div>
+    <div id="rotary"><div id="dial" tabindex="0" role="button" aria-label="Rotate encoder" aria-disabled="true"><div id="knob-face"></div><img id="knob-image" alt="" hidden><button id="center" type="button" aria-label="Encoder center button" aria-pressed="false" aria-disabled="true"></button></div></div>
+  </div>
+  <script src="applet.js"></script>
+  <script src="encoder.js"></script>
+</body>
+</html>

@@ -34,6 +34,7 @@ Each parameter has `Name`, `DisplayName`, `ParamType` and `Default`. Supported t
 | `color` | CSS color string |
 | `variable` | Server variable name, not its value |
 | `list` | Selected string `Value` from `ListItems` |
+| `image` | A resolved deck-resource URL; the editor presents MATRIC's image picker |
 
 ```json
 {
@@ -49,6 +50,14 @@ Each parameter has `Name`, `DisplayName`, `ParamType` and `Default`. Supported t
 ```
 
 Parameters are saved per container. Same-ID updates preserve existing values and add defaults for new parameters. Changing a default does not overwrite a user's saved value.
+
+Numeric parameters can declare optional finite `Minimum` and `Maximum` values. The editor applies these as bounds and validation messages; the minimum must not exceed the maximum. Validate/clamp inputs inside the applet as well, including missing or older saved values.
+
+```json
+{"Name":"KnobSize","DisplayName":"Knob size","ParamType":"number","Default":50,"Minimum":10,"Maximum":100}
+```
+
+For an `image` parameter, use `Default: null`. The chosen filename is saved in the custom control's `Config.AdditionalResources` under the parameter's `Name`, not as an opaque string inside `AppletParams`. MATRIC resolves these resource entries to revision-aware URLs and merges them into `PARAMSUPDATE`, overriding a same-named ordinary parameter. Clearing an image removes its resource entry, so handle an absent URL. Custom controls participate in the ordinary resource lifecycle: copying, Save As and deck export/import retain files and remap filename collisions while preserving parameter keys. Selecting a different applet clears the prior applet's parameters, image resources and event actions. See the [combined encoder](../stream-deck/encoder-applet.md#applet-properties-and-deck-resources) for a complete example.
 
 ### Events
 

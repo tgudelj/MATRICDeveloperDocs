@@ -29,6 +29,8 @@ python tools/check-docs.py
 
 The package is generated from the five starter source files with stable metadata. Commit both the source changes and the updated `.mapl`.
 
+For the combined encoder source under `examples/applets/matric-plugin-encoder`, run `python tools/package-encoder.py` after edits. Keep it synchronized with the matching built-in applet and commit its `.mapl` alongside the four source files. `check-docs.py` verifies both packages.
+
 ## Run starter browser checks
 
 With Node.js 20 or later installed:

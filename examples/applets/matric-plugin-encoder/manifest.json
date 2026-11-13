@@ -1,0 +1,22 @@
+{
+  "AppletId": "matric-plugin-encoder",
+  "DisplayName": "Plugin touch strip + rotary",
+  "Description": "One encoder channel with a touch display and rotary sharing a single plugin action and its settings. Configure the action under Plugin action.",
+  "Author": "MATRIC",
+  "VersionMajor": 1,
+  "VersionMinor": 1,
+  "AppletParams": [
+    {"Name":"KnobImage","DisplayName":"Knob image","ParamType":"image","Default":null},
+    {"Name":"KnobImageActive","DisplayName":"Knob image when interacting","ParamType":"image","Default":null},
+    {"Name":"KnobSize","DisplayName":"Knob size (% of applet width)","ParamType":"number","Default":50,"Minimum":10,"Maximum":100},
+    {"Name":"KnobGap","DisplayName":"Minimum gap from strip (% of applet width)","ParamType":"number","Default":4,"Minimum":0,"Maximum":100}
+  ],
+  "EventsDefinition": [
+    {
+      "Name": "input",
+      "DisplayName": "Plugin action",
+      "Description": "The shared action for the display, taps, long presses, rotary steps and center button.",
+      "AllowedActions": ["ActionStreamDeckContainer"]
+    }
+  ]
+}

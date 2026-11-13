@@ -17,11 +17,12 @@ Start with [Extend MATRIC](index.md) to choose the right extension path.
 | Display external data in an applet | [Live status recipe](recipes/live-status.md) |
 | Share an extension or solve a problem | [Sharing and troubleshooting](troubleshooting.md) |
 
-**Stream Deck plugin support is experimental.** Compatibility varies by plugin, version and action. Profile switching, Stream Deck deep links, Elgato action/profile import and export, continuous sliders and touch strips are excluded.
+**Stream Deck plugin support is experimental.** Compatibility varies by plugin, version and action. The [combined encoder applet](stream-deck/encoder-applet.md) supports compatible display feedback and tap/hold alongside rotary input. Profile switching, Stream Deck deep links, Elgato action/profile import and export, continuous sliders, custom display layouts and special hardware screens remain excluded.
 
 ## Download examples
 
 - [Starter applet package](examples/applets/starter-applet.mapl): install on the MATRIC Windows PC, then customize the [source files](examples/applets/starter-applet). Includes proportional sizing, parameters, variable display and an action event.
+- [Plugin touch strip + rotary](examples/applets/matric-plugin-encoder.mapl): one encoder channel with configurable artwork and a shared plugin instance; see its [guide](stream-deck/encoder-applet.md) and [source](examples/applets/matric-plugin-encoder).
 - [Python UDP example](examples/udp/status.py): no third-party Python packages required.
 - [Hello applet](examples/applets/hello-applet): a minimal two-file message example.
 - [Hello Stream Deck plugin](examples/stream-deck/com.example.matrichello.sdPlugin): a small Node 24 action example.
