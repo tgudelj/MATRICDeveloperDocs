@@ -33,6 +33,8 @@ The production marketplace resolver also downloaded Counter and System Informati
 
 The manager's browser test clicks **OpenAction marketplace** in both the separate window and Settings. It verifies the exact HTTPS URL through the existing default-browser bridge, no embedded marketplace frame, unchanged folder import source and no automatic import or backend start. It does not launch the operator's browser or exercise Windows default-handler selection.
 
+The no-handler installation failure was reproduced on Windows with the original 2.9.19 registration: advertising an alternative, even with a protocol marker, supplies no launch command. The corrected registration passed 23 isolated Windows checks, including a real shell URI activation with exact arguments, an executable path containing spaces and Unicode, foreign-handler preservation, repair, changed-path upgrade, uninstall, rollback and write failure. These checks use unique temporary protocol names and an inert receiver; they do not modify the installed `opendeck` association. The installer suite passed 70 controlled checks, including generated actions and actual sequence numbers from a compiled diagnostic MSI. Full MSI install/upgrade/repair/uninstall execution and a browser-to-installed-MATRIC walkthrough remain unverified.
+
 | Plugin release | Observed behavior |
 | --- | --- |
 | Counter 1.0.1 | Keypad and encoder input, independent values, saved settings, live titles and inspector editing |
