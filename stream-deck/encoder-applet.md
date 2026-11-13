@@ -33,6 +33,8 @@ The layout reserves room for the diagonal of rotating artwork, centers the strip
 
 The center's hit area follows its configured size. Its image changes only while the center is pressed, independently of outer-knob rotation or wheel input. The maximum size leaves an outer ring available for dragging. Unavailable pressed artwork falls back to the idle artwork; existing applets without these parameters retain the default center size and appearance.
 
+The encoder controls suppress the browser's tap-highlight overlay so it does not obscure the pressed artwork. Keyboard focus indicators remain visible.
+
 An in-place saved-deck update retries previously failed artwork loads without changing decks or reloading the applet document. Resource revision changes also resend resolved image URLs to retained applets. Successfully loaded images remain cached.
 
 The editor's image picker stores a flat deck filename in `Config.AdditionalResources`, keyed by the parameter name. `AppletParams` holds the numeric values. On `PARAMSUPDATE`, MATRIC merges the resource entries into the parameter object as resolved, revision-aware deck URLs. For example:
