@@ -4,11 +4,14 @@
   "Description": "One encoder channel with a touch display and rotary sharing a single plugin action and its settings. Configure the action under Plugin action.",
   "Author": "MATRIC",
   "VersionMajor": 1,
-  "VersionMinor": 1,
+  "VersionMinor": 2,
   "AppletParams": [
     {"Name":"KnobImage","DisplayName":"Knob image","ParamType":"image","Default":null},
     {"Name":"KnobImageActive","DisplayName":"Knob image when interacting","ParamType":"image","Default":null},
     {"Name":"KnobSize","DisplayName":"Knob size (% of applet width)","ParamType":"number","Default":50,"Minimum":10,"Maximum":100},
+    {"Name":"CenterButtonImage","DisplayName":"Center button image","ParamType":"image","Default":null},
+    {"Name":"CenterButtonImageActive","DisplayName":"Center button image when pressed","ParamType":"image","Default":null},
+    {"Name":"CenterButtonSize","DisplayName":"Center button size (% of knob)","ParamType":"number","Default":36,"Minimum":10,"Maximum":90},
     {"Name":"KnobGap","DisplayName":"Minimum gap from strip (% of applet width)","ParamType":"number","Default":4,"Minimum":0,"Maximum":100}
   ],
   "EventsDefinition": [

@@ -2,10 +2,12 @@
   'use strict';
   const dial = document.getElementById('dial'), center = document.getElementById('center');
   const surface = document.getElementById('surface'), rotary = document.getElementById('rotary'), knobImage = document.getElementById('knob-image');
+  const centerImage = document.getElementById('center-image');
   const controlId = location.hash.slice(1), stepAngle = Math.PI / 12;
   const images = new Map();
   let enabled = false, parentOrigin = '*', drag = null, held = null, angle = 0, pulse = null;
   let parameters = {KnobSize:50,KnobGap:4}, normalImage = null, activeImage = null;
+  let centerNormalImage = null, centerActiveImage = null;
 
   function bounded(value, fallback, minimum, maximum) {
     return typeof value === 'number' && Number.isFinite(value) ? Math.max(minimum,Math.min(maximum,value)) : fallback;
@@ -20,6 +22,8 @@
     const top = (height - (stripHeight + gap + knobBox) * scale) / 2;
     Object.assign(surface.style,{left:(width - availableWidth * scale) / 2 + 'px',top:top + 'px',width:availableWidth * scale + 'px',height:stripHeight * scale + 'px'});
     Object.assign(rotary.style,{left:(width - knobBox * scale) / 2 + 'px',top:top + (stripHeight + gap) * scale + 'px',width:knobBox * scale + 'px',height:knobBox * scale + 'px'});
+    const centerSize = bounded(parameters.CenterButtonSize,36,10,90) / Math.SQRT2;
+    Object.assign(center.style,{width:centerSize + '%',height:centerSize + '%'});
   }
   function imageSource(value) {
     if (typeof value !== 'string' || value.length > 800000) return null;
@@ -29,14 +33,19 @@
   function artwork() {
     const interacting = drag !== null || held !== null || pulse !== null;
     const ready = source => { const decoded = images.get(source); return decoded?.complete && decoded.naturalWidth > 0; };
-    const source = interacting && ready(activeImage) ? activeImage : ready(normalImage) ? normalImage : null;
-    knobImage.hidden = !source; dial.classList.toggle('custom-image',!!source);
-    if (source && knobImage.getAttribute('src') !== source) knobImage.src = source;
+    for (const [element,owner,normal,active,pressed] of [[knobImage,dial,normalImage,activeImage,interacting],
+      [centerImage,center,centerNormalImage,centerActiveImage,held !== null]]) {
+      const source = pressed && ready(active) ? active : ready(normal) ? normal : null;
+      element.hidden = !source; owner.classList.toggle('custom-image',!!source);
+      if (source && element.getAttribute('src') !== source) element.src = source;
+    }
   }
   function loadArtwork() {
     normalImage = imageSource(parameters.KnobImage); activeImage = imageSource(parameters.KnobImageActive);
-    for (const source of images.keys()) if (source !== normalImage && source !== activeImage) images.delete(source);
-    for (const source of [normalImage,activeImage]) if (source && !images.has(source)) {
+    centerNormalImage = imageSource(parameters.CenterButtonImage); centerActiveImage = imageSource(parameters.CenterButtonImageActive);
+    const sources = [normalImage,activeImage,centerNormalImage,centerActiveImage];
+    for (const source of images.keys()) if (!sources.includes(source)) images.delete(source);
+    for (const source of sources) if (source && !images.has(source)) {
       const image = new Image(); images.set(source,image); image.onload = artwork; image.onerror = artwork; image.src = source;
     }
     artwork();

@@ -24,9 +24,14 @@ The former touch-only applet is no longer distributed or given encoder routing. 
 | `KnobImage` | `image` | None | Idle artwork; the built-in knob is used when absent or unavailable |
 | `KnobImageActive` | `image` | None | Artwork while dragging, holding the center, or briefly after a wheel/keyboard step; falls back to the idle artwork |
 | `KnobSize` | `number` | `50` | Knob size as a percentage of applet width; range 10–100 |
+| `CenterButtonImage` | `image` | None | Independent, non-rotating center-button artwork |
+| `CenterButtonImageActive` | `image` | None | Artwork while the center button is held; falls back to its idle image |
+| `CenterButtonSize` | `number` | `36` | Center-button diameter as a percentage of the knob diameter; range 10–90 |
 | `KnobGap` | `number` | `4` | Minimum separation from the strip as a percentage of applet width; range 0–100 |
 
 The layout reserves room for the diagonal of rotating artwork, centers the strip and knob, and scales the complete group down when the available height is insufficient. The requested size can therefore be reduced in a short container. Images retain their aspect ratio. A long rectangular image may leave unused space.
+
+The center's hit area follows its configured size. Its image changes only while the center is pressed, independently of outer-knob rotation or wheel input. The maximum size leaves an outer ring available for dragging. Unavailable pressed artwork falls back to the idle artwork; existing applets without these parameters retain the default center size and appearance.
 
 The editor's image picker stores a flat deck filename in `Config.AdditionalResources`, keyed by the parameter name. `AppletParams` holds the numeric values. On `PARAMSUPDATE`, MATRIC merges the resource entries into the parameter object as resolved, revision-aware deck URLs. For example:
 
@@ -101,7 +106,9 @@ The default host device is named **MATRIC**, uses the SDK's Stream Deck+ type `7
 
 ## Volume Controller example and validation
 
-Volume Controller **1.4.260325** was checked using an isolated copy of the unchanged Windows package. Choose **System volume controller** (`系统音量控制器`) for master volume. The plugin's **Show title** option changes its own presentation: enabled settings produced a device name and icon; disabling it produced a volume percentage, or an `X` when muted. MATRIC displays the plugin's output and does not invent a percentage. In these checks, images were 128 × 128; they are fitted without stretching into the logical strip section.
+Volume Controller **1.4.260325** was checked using an isolated copy of the unchanged Windows package. Choose **System Volume Controller** for master volume. MATRIC now uses the package's English names instead of its Chinese manifest defaults. The plugin's **Show title** option changes its own presentation: enabled settings produced a device name and icon; disabling it produced a volume percentage, or an `X` when muted. MATRIC displays the plugin's output and does not invent a percentage. In these checks, images were 128 × 128; they are fitted without stretching into the logical strip section.
+
+Newly selecting **Output Device Volume Control** copies its declared `Settings`, including `deviceType: 1`; **Input Device Volume Control** declares `deviceType: 0`. Native checks confirmed playback and capture devices respectively in the settings data used by their dropdowns. Existing saved settings are preserved. If an older selection lists microphones for the output action, choose another action and then select the output action again before configuring it; this resets that occurrence to the package defaults.
 
 Master-volume rotation, center mute, generated images and refresh of another independent instance were checked. Original Windows volume/mute values were restored. Tap/hold wire routing was checked with a controlled backend; a native Volume Controller touch response is not certified. Different device selections or plugin versions can behave differently.
 

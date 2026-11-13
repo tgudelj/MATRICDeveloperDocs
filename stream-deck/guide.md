@@ -120,6 +120,10 @@ Legacy packages that omit a plugin UUID may use mixed-case action IDs; MATRIC pr
 
 A package status of **Ready** means it passed import validation. A registered backend means it connected to MATRIC. Neither proves that its external service works or that all actions are compatible.
 
+MATRIC reads optional package translations for plugin names, categories, action names and tooltips. English is the fallback, followed by the configured registration language. Missing, malformed or oversized translation files retain the available fallback strings. Action identities and package files are unchanged. See the [SDK localization format](https://docs.elgato.com/streamdeck/sdk/guides/i18n/).
+
+When selecting a new action, MATRIC copies an optional action-level manifest `Settings` value into that occurrence. This supports vendor defaults such as a capture/playback device selector. Each occurrence owns a separate copy. Existing settings and plugin writes are not merged with defaults or silently rewritten; selecting another action resets the occurrence and applies that action's defaults.
+
 ## Plugin modes and physical input
 
 A Keypad action's state is a plugin-owned visual or operating mode. It is independent of whether the MATRIC control is physically pressed, released or toggled. `keyDown` and `keyUp` retain their input meaning, and `payload.state` reports the current plugin mode. Selecting a mode does not synthesize input, change the control's stored state, or change its saved design.
