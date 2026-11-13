@@ -33,6 +33,8 @@ The layout reserves room for the diagonal of rotating artwork, centers the strip
 
 The center's hit area follows its configured size. Its image changes only while the center is pressed, independently of outer-knob rotation or wheel input. The maximum size leaves an outer ring available for dragging. Unavailable pressed artwork falls back to the idle artwork; existing applets without these parameters retain the default center size and appearance.
 
+An in-place saved-deck update retries previously failed artwork loads without changing decks or reloading the applet document. Resource revision changes also resend resolved image URLs to retained applets. Successfully loaded images remain cached.
+
 The editor's image picker stores a flat deck filename in `Config.AdditionalResources`, keyed by the parameter name. `AppletParams` holds the numeric values. On `PARAMSUPDATE`, MATRIC merges the resource entries into the parameter object as resolved, revision-aware deck URLs. For example:
 
 ```json
@@ -111,6 +113,10 @@ Volume Controller **1.4.260325** was checked using an isolated copy of the uncha
 Newly selecting **Output Device Volume Control** copies its declared `Settings`, including `deviceType: 1`; **Input Device Volume Control** declares `deviceType: 0`. Native checks confirmed playback and capture devices respectively in the settings data used by their dropdowns. Existing saved settings are preserved. If an older selection lists microphones for the output action, choose another action and then select the output action again before configuring it; this resets that occurrence to the package defaults.
 
 This plugin version's Output Device Volume Control inspector supplies an Adjust Step slider without a numerical readout; the readout markup is commented out in the supplied page. The older System Volume Controller action has separate numeric inputs. MATRIC does not rewrite these third-party inspector pages.
+
+With **Dynamic** artwork, Output Device Volume Control can draw both the current volume and configured adjustment step into its complete image. An isolated capture with the same saved settings produced `48% - 6%`; changing only the step from −6 to −9 produced `48% - 9%` without changing Windows volume. The plugin-supplied PNG and MATRIC-prepared PNG were byte-identical, and the client scene contained only that image. The step in this mode is plugin artwork, not a MATRIC text overlay; removing it would change the plugin's presentation.
+
+The adjustment step is signed. Native checks confirmed that clockwise input (`ticks: 1`) decreases volume with a −6 step and increases it with +6; counterclockwise input (`ticks: -1`) decreases volume with +6. Use a positive Adjust Step for the usual clockwise-increases behavior. These checks restored the endpoint's original volume and mute and did not edit the user's saved action.
 
 Master-volume rotation, center mute, generated images and refresh of another independent instance were checked. Original Windows volume/mute values were restored. Tap/hold wire routing was checked with a controlled backend; a native Volume Controller touch response is not certified. Different device selections or plugin versions can behave differently.
 

@@ -45,7 +45,8 @@
     centerNormalImage = imageSource(parameters.CenterButtonImage); centerActiveImage = imageSource(parameters.CenterButtonImageActive);
     const sources = [normalImage,activeImage,centerNormalImage,centerActiveImage];
     for (const source of images.keys()) if (!sources.includes(source)) images.delete(source);
-    for (const source of sources) if (source && !images.has(source)) {
+    // A saved-deck update may retry a resource that failed during the previous load.
+    for (const source of sources) if (source && (!images.has(source) || images.get(source).complete && images.get(source).naturalWidth === 0)) {
       const image = new Image(); images.set(source,image); image.onload = artwork; image.onerror = artwork; image.src = source;
     }
     artwork();

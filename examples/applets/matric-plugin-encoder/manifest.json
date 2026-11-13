@@ -4,7 +4,7 @@
   "Description": "One encoder channel with a touch display and rotary sharing a single plugin action and its settings. Configure the action under Plugin action.",
   "Author": "MATRIC",
   "VersionMajor": 1,
-  "VersionMinor": 2,
+  "VersionMinor": 3,
   "AppletParams": [
     {"Name":"KnobImage","DisplayName":"Knob image","ParamType":"image","Default":null},
     {"Name":"KnobImageActive","DisplayName":"Knob image when interacting","ParamType":"image","Default":null},
