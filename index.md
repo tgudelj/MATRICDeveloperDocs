@@ -10,7 +10,7 @@ Build a small integration, add your own control to a deck, or reuse a supported 
 | Create a gauge, dashboard, keypad, or other custom interface inside a deck | [Custom applets](applets/quickstart.md) | An HTML iframe on each client displaying the applet |
 | Use an existing plugin action, or write a plugin using the Stream Deck protocol | [Stream Deck compatibility](stream-deck/guide.md) | A backend on the Windows PC, with an optional configuration window |
 
-**Stream Deck support is experimental.** Compatibility depends on the plugin, version, action and external software it uses. The [combined encoder applet](stream-deck/encoder-applet.md) adds compatible display feedback and tap/hold to rotary input. Profile switching, Stream Deck deep links, Elgato action/profile import and export, continuous sliders, custom encoder layouts and special hardware displays remain excluded.
+**Stream Deck support is experimental.** Compatibility depends on the plugin, version, action and external software it uses. The [combined encoder applet](stream-deck/encoder-applet.md) adds compatible images, built-in and custom encoder layouts, and tap/hold to rotary input. Custom layouts require applet 1.5 and a matching MATRIC Desktop build. Profile switching, Stream Deck deep links, Elgato action/profile import and export, continuous sliders, swipe navigation and special hardware displays remain excluded.
 
 ![The three extension paths and where their code runs](assets/extension-paths.svg)
 

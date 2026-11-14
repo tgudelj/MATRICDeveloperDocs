@@ -4,6 +4,8 @@ This is the self-contained built-in MATRIC applet for one plugin encoder channel
 
 Use a Desktop/client build that includes the combined encoder integration. Keep `AppletId: matric-plugin-encoder`; changing the ID disables the built-in routing. The original 2.9.19 installer may not include this integration.
 
+Version **1.5** renders package-defined custom layouts with up to 32 items, a prepared background image and text fade. Use it with a MATRIC Desktop build that includes the custom-layout loader. Updating this browser applet alone cannot add the server-side feature. Existing knob/center artwork and deck parameters are retained when the package is replaced.
+
 - [Importable applet package](../matric-plugin-encoder.mapl)
 - [Setup, properties, contracts and compatibility](../../../stream-deck/encoder-applet.md)
 - Runtime source: [manifest.json](manifest.json), [applet.html](applet.html), [applet.js](applet.js), [encoder.js](encoder.js)

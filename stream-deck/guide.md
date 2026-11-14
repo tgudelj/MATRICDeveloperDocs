@@ -60,7 +60,7 @@ In this fallback, `port` is a number and `info` and `actionInfo` are parsed obje
 
 When a native or Node backend declares `HasSettingsInterface: true`, the plugin manager offers **Plugin settings**. MATRIC starts the backend if needed, waits for registration and sends `{ "event": "showSettingsInterface" }`. This is independent of a saved control occurrence and does not create a Property Inspector or automatically save a deck. The backend is responsible for creating or bringing forward its own window; there is no acknowledgement proving that it opened. MATRIC reports that it requested the window. Closing the plugin's window does not stop its backend; **Stop backend** stops the owned process tree. HTML backend popups are unsupported and do not get this button.
 
-Device-provider messages such as `registerDevice`, `deregisterDevice`, hardware input injection and `rerenderImages` are rejected as unsupported capabilities. They never register a device or inject input into MATRIC. Profile switching, deep links and continuous sliders remain excluded. Compatible encoder display and touch input are available through the [combined encoder applet](encoder-applet.md); custom layouts and special hardware displays remain excluded. A plugin may import successfully yet depend on an unsupported feature.
+Device-provider messages such as `registerDevice`, `deregisterDevice`, hardware input injection and `rerenderImages` are rejected as unsupported capabilities. They never register a device or inject input into MATRIC. Profile switching, deep links and continuous sliders remain excluded. Compatible encoder images, built-in and custom layouts, and touch input are available through the [combined encoder applet](encoder-applet.md); special hardware displays remain excluded. Custom layouts require applet 1.5 and a MATRIC Desktop build with the layout loader. A plugin may import successfully yet depend on an unsupported feature.
 
 ### Checked Windows examples
 
@@ -107,12 +107,12 @@ The manifest identifies the package, backend and actions; see the [Elgato manife
 | Manifest SDK versions | 1–3 accepted by package validation; acceptance does not certify every SDK feature |
 | Keypad input | Discrete press/release; rotary controls can produce button-style click pairs in Keypad mode |
 | Encoder input | Relative signed rotation ticks and center down/up; the combined applet adds tap/hold on the same instance; legacy `Knob` maps to Encoder in MATRIC while retaining its wire name |
-| Encoder display | Combined applet: complete images and six built-in layouts; keyed partial feedback and aspect-preserving image fitting |
+| Encoder display | Combined applet: complete images, six built-in layouts and package-defined Elgato/OpenAction JSON layouts; keyed partial feedback, layout backgrounds and aspect-preserving item images |
 | Keypad appearance | Per-state title/image and plugin-selected states, including more than two; OK/alert feedback; runtime only |
 | Settings and messaging | Per-action/global settings and backend–Property Inspector messaging |
 | Resource API | Explicit deck-owned file snapshots through `getResources`/`setResources` |
 | Application and wake events | Server application monitoring and Windows wake notifications |
-| Excluded | Profile switching, Stream Deck deep linking, Elgato `.streamDeckAction`/`.streamDeckProfile` import/export, continuous sliders, custom encoder layouts, swipe navigation and special hardware displays |
+| Excluded | Profile switching, Stream Deck deep linking, Elgato `.streamDeckAction`/`.streamDeckProfile` import/export, continuous sliders, swipe navigation and special hardware displays |
 
 Ordinary rotary controls provide input; use **Plugin touch strip + rotary** for one action instance combining its display, touch input and rotary. See the [encoder applet guide](encoder-applet.md) for installation, properties, payloads, logical devices, lifecycle and validation limits. Stream Deck Multi Action behavior is not fully reproduced. Account flows that require Stream Deck deep-link callbacks are unsupported. `openUrl` accepts absolute HTTP/HTTPS URLs only.
 

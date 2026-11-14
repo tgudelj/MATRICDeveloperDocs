@@ -2,7 +2,7 @@
 
 **Experimental:** the **Plugin touch strip + rotary** applet represents one encoder channel: a touch display above a rotary, with one plugin action instance and one settings record. Place several containers beside each other for several channels. This follows Stream Deck+'s [dial and touch-strip model](https://docs.elgato.com/streamdeck/sdk/guides/dials/).
 
-Use a MATRIC Desktop/client build that includes this applet. Earlier 2.9.19 installers may not include it. Windows native, Node and OpenAction action plugins still have the [ordinary compatibility limits](guide.md#know-the-compatibility-boundary); import success does not certify display or touch behavior.
+Use a MATRIC Desktop/client build that includes this applet. Custom layouts require **applet 1.5 and a MATRIC Desktop build with custom-layout support**; updating only the applet does not add the server-side loader. Earlier 2.9.19 installers may not include these features. Windows native, Node and OpenAction action plugins still have the [ordinary compatibility limits](guide.md#know-the-compatibility-boundary); import success does not certify display or touch behavior.
 
 [Download the applet](../examples/applets/matric-plugin-encoder.mapl) or inspect its [source files](../examples/applets/matric-plugin-encoder). The installer bundles the same applet. The default deck's **Applets** page includes an example with custom knob artwork and an empty plugin selection; copy the read-only deck before configuring it. Plugin binaries are a separate dependency.
 
@@ -96,13 +96,67 @@ send({ event: 'setFeedback', context, payload: { value: '74%', indicator: 74 } }
 
 Complete images can be supplied to the `$A0` layout's `full-canvas` pixmap. Legacy Knob `setImage` updates that full-surface image. In legacy Knob `$A0` mode, only the complete image is rendered: MATRIC does not add a title or inner canvas over text already drawn by the plugin. Separate `setTitle` updates do not overlay that image. Encoder `setImage` retains its software-icon semantics and is not used as a touch-surface image. `setTitle` still updates titles in standard Encoder layouts; ordinary keypad titles are unaffected. Hardware-only and combined targets are accepted for Knob images; software-only images do not change the touch surface.
 
-Fixed layout item geometry is retained. Supported feedback includes text and pixmap values, visibility, opacity, stacking order, text size/weight/alignment/color, and indicator values, ranges, colors and built-in subtypes. Unknown item keys are ignored; unsupported properties and invalid values are rejected. Custom layout files and arbitrary drawing instructions are not implemented and produce an explanatory display message. Trigger descriptions, continuous sliders, special hardware screens and full-device touchbar modes remain outside this applet's scope. Use static images; animated touch-strip rendering is not guaranteed.
+Fixed layout item geometry is retained. Supported feedback includes text and pixmap values, visibility, opacity, stacking order, text size/weight/alignment/color, and indicator values, ranges, colors and subtypes. Text supports `clip`, `ellipsis` and `fade`; fading affects the text rather than erasing the layers beneath it. Unknown item keys are ignored. An unsupported property or invalid value rejects the feedback batch without applying its other changes.
+
+Trigger descriptions, continuous sliders, swipe navigation, special hardware screens and full-device touchbar modes remain outside this applet's scope. Layouts are declarative data; arbitrary drawing commands or executable layout content are not supported. Use static images; animated touch-strip rendering is not guaranteed.
 
 The host decodes and validates package/data images before sending feedback to clients. Existing image limits and self-contained SVG restrictions apply. Image work is asynchronous and coalesced; stale work cannot overwrite a replacement layout or action context. The shared 64 MiB prepared-image cache and 8 MiB/8,192-entry image-work bounds also apply to touch feedback.
 
+### Custom layouts
+
+Elgato and OpenAction actions use the same custom-layout path. OpenAction documents `setFeedback` and `setFeedbackLayout` and refers to the [Elgato layout format](https://docs.elgato.com/streamdeck/sdk/references/layouts/); MATRIC does not require a separate OpenAction layout format. Legacy Stream Dock `Knob` actions using complete `setImage` frames retain their existing behavior.
+
+Place a layout JSON file inside the plugin's `.sdPlugin` directory. All layout and image paths are relative to that directory, including images referenced by a layout in a subfolder. Paths must stay within the package; linked files and traversal are rejected. MATRIC reads the managed plugin copy, so stop and reimport an updated source package before testing changed layout files.
+
+Copy [level.json](../examples/stream-deck/layouts/level.json) and [background.svg](../examples/stream-deck/layouts/background.svg) into your plugin's `layouts` folder. The example uses all four item types and has no external image dependencies. Select it in the action's manifest:
+
+```json
+{
+  "Controllers": ["Encoder"],
+  "Encoder": {
+    "layout": "layouts/level.json",
+    "background": "layouts/background"
+  }
+}
+```
+
+`Encoder.background` is an optional package image behind the entire layout; its filename extension is omitted in the manifest. It does not replace the user's knob or center-button artwork. A layout can also be selected at runtime, and its items updated by key:
+
+```javascript
+send({ event: 'setFeedbackLayout', context,
+  payload: { layout: 'layouts/level.json' } });
+send({ event: 'setFeedback', context, payload: {
+  title: 'Level', value: '73%', meter: 73, balance: 50
+} });
+// Other items and the meter value remain unchanged.
+send({ event: 'setFeedback', context, payload: { value: '74%' } });
+```
+
+The JSON has a nonempty `id` and an `items` array. Its optional `controller` must be `Encoder`. Each item has a unique `key`, a `type` of `text`, `pixmap`, `bar` or `gbar`, and a fixed `rect: [x, y, width, height]`. Rectangles must have positive dimensions and fit the 200 × 100 section. Overlap requires different `zOrder` values; changing a layer at runtime must still satisfy this rule. Keys, types and rectangles cannot be changed through feedback.
+
+Items start with the values supplied by the file. Omitted text is empty, with centered alignment and clipped overflow; indicator defaults include range 0–100, subtype 4, a two-pixel white border and a dark-gray background. Omitted visibility, opacity and layer default to `true`, `1` and `0`. A `title` text item with an empty initial value uses the action's first state title, or its name when that title is absent. An `icon` pixmap without a declared value uses the first state image or action icon; an explicit empty image stays clear. `setTitle` can update the `title` item. These fallbacks do not reproduce all of the Stream Deck application's title/icon editing controls.
+
+Pixmap values accept package-relative paths, image data URLs and raw, self-contained SVG strings. Every form passes the same host image validation and preparation before publication; clients receive prepared image data rather than package filesystem paths. Scripts and external SVG dependencies remain prohibited. See the [shared image limits](guide.md#windows-openaction-plugins).
+
+| Limit | Accepted values |
+| --- | --- |
+| Layout path / file | Package-relative `.json` path, at most 256 characters; file at most 256 KiB; JSON depth at most 16; duplicate JSON properties rejected |
+| Layout identity / items | Nonempty `id` of at most 256 characters; at most 32 items; unique, nonblank keys of at most 128 characters without control characters |
+| Feedback | At most 32 item keys in one batch; omitted items retain their values |
+| Text / font | At most 4,096 characters; integer size 1–200; integer weight 100–1000 |
+| Visibility / layering | Boolean `enabled`; opacity 0–1; `zOrder` 0–700, with no overlap at the same layer |
+| Indicators | Numeric values and range endpoints within −1,000,000…1,000,000, with maximum greater than minimum; integer subtype 0–4; integer border width and bar height 0–100 |
+| Images / colors | Image source at most 800,000 characters, plus shared image/cache limits; color strings at most 256 characters, using supported CSS colors or color-stop gradients |
+
+A valid layout switch replaces the old items with the selected layout's defaults; it does not carry feedback values between layouts. An invalid runtime replacement leaves the previous display active and records a diagnostic. An invalid initial layout shows a display error while keeping compatible dial input available. Pending images from a previous layout cannot overwrite its replacement, even when both layouts use the same item key.
+
+Layouts and feedback are runtime state. Recovery snapshots retain the current scene, including its background. A backend restart creates new contexts using the manifest layout; plugins can restore another layout from their saved settings. Layouts, images and plugin binaries remain package resources and are not added to a MATRIC deck export.
+
+To update an existing installation, install a matching MATRIC Desktop build and replace the applet with version 1.5 using the download above, or use an installer that includes it. Reload the client after updating. The applet ID and deck parameters remain unchanged; saved knob and center artwork do not need to be recreated.
+
 ### Built-in host message
 
-This applet also receives `TOUCHSTRIPUPDATE` from its actual parent. Its payload is `{display, enabled}`. A display has `version: 1`, `width: 200`, `height: 100`, the selected `layout`, and bounded `items` with keys, types, rectangles and values; an unsupported layout may supply `message`. `display: null` clears feedback. This is a reserved built-in channel, not a general permission for arbitrary applets to host plugin encoders. Changing the applet ID disables this routing. See the source for the renderer; ordinary applets should use the [general applet messages](../applets/reference.md#messages-from-matric).
+This applet also receives `TOUCHSTRIPUPDATE` from its actual parent. Its payload is `{display, enabled}`. A valid display has `version: 1`, `width: 200`, `height: 100`, the selected `layout`, and at most 32 `items` with keys, types, rectangles and values. An optional `background` contains a prepared image data URL. An initial layout failure can instead supply `message` and an empty item array. `display: null` clears feedback. This is a reserved built-in channel, not a general permission for arbitrary applets to host plugin encoders. Changing the applet ID disables this routing. See the source for the renderer; ordinary applets should use the [general applet messages](../applets/reference.md#messages-from-matric).
 
 ### Logical device metadata
 

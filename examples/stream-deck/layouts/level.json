@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/layout.json",
+  "id": "matric-level-example",
+  "controller": "Encoder",
+  "items": [
+    { "key": "title", "type": "text", "rect": [8, 4, 184, 22], "value": "Level", "font": { "size": 16, "weight": 600 } },
+    { "key": "icon", "type": "pixmap", "rect": [8, 32, 24, 24], "value": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\"><path fill=\"white\" d=\"M2 8h5l7-6v20l-7-6H2z\"/></svg>" },
+    { "key": "value", "type": "text", "rect": [40, 30, 152, 28], "value": "50%", "font": { "size": 24, "weight": 600 }, "text-overflow": "fade" },
+    { "key": "meter", "type": "bar", "rect": [8, 64, 184, 12], "value": 50, "border_w": 0, "bar_fill_c": "#00c8ce" },
+    { "key": "balance", "type": "gbar", "rect": [8, 80, 184, 16], "value": 50, "border_w": 0, "bar_h": 10, "bar_bg_c": "0:#00c8ce,0.5:white,1:#00c8ce" }
+  ]
+}

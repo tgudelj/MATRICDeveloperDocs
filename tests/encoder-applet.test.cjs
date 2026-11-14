@@ -55,3 +55,21 @@ test('documented parameter ranges keep rotated artwork and display within resize
     assert.ok(geometry.dial.y>=geometry.strip.bottom);
   }
 });
+
+test('downloaded custom layout example renders its raw SVG, background and indicators',async t=>{
+  const folder=path.resolve(__dirname,'../examples/stream-deck/layouts');
+  const layout=JSON.parse(fs.readFileSync(path.join(folder,'level.json'),'utf8'));
+  assert.equal(layout.controller,'Encoder');assert.equal(new Set(layout.items.map(item=>item.key)).size,layout.items.length);
+  for(const item of layout.items){const [x,y,w,h]=item.rect;assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=200&&y+h<=100);}
+  const display={version:1,width:200,height:100,layout:'layouts/level.json',items:layout.items.map(item=>({...item})),
+    background:'data:image/svg+xml;base64,'+fs.readFileSync(path.join(folder,'background.svg')).toString('base64')};
+  for(const item of display.items)if(item.type==='pixmap')item.value='data:image/svg+xml;base64,'+Buffer.from(item.value).toString('base64');
+  const page=await browser.newPage();t.after(()=>page.close());const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(origin);const child=page.frames().find(frame=>frame.url().includes('applet.html'));
+  await page.frameLocator('iframe').locator('#message').waitFor({state:'hidden'});
+  await page.evaluate(display=>document.querySelector('iframe').contentWindow.postMessage({messageId:'TOUCHSTRIPUPDATE',payload:{enabled:true,display}},location.origin),display);
+  await child.waitForFunction(()=>{const c=document.querySelector('canvas'),ctx=c.getContext('2d'),s=c.width/200;
+    const meter=ctx.getImageData(20*s,69*s,1,1).data,bg=ctx.getImageData(1*s,99*s,1,1).data;
+    return meter[1]===200&&meter[2]===206&&bg[0]===16&&bg[1]===24&&bg[2]===32;});
+  assert.deepEqual(errors,[]);
+});
