@@ -43,7 +43,7 @@ Tokens and environment overrides are protected for the current Windows account a
 
 ## Configure an action
 
-Create a disposable deck and add **MCP** to a button's press event. Select `Local MCP example`, discover tools and choose `get_value`. Leave arguments empty. Under **Preview arguments and run test**, use **Preview arguments** first, then **Run test** to perform the read.
+Create a disposable deck and add **MCP** to a button's press event. Select `Local MCP example`, refresh tools using the small icon beside **Tool** (tooltip **Refresh list**) and choose `get_value`. The Tool dropdown is sorted alphabetically by displayed name. Type part of a title or tool identifier to filter the list, ignoring case, then select a match with the mouse or keyboard. Searching alone neither changes the configured tool nor performs discovery or invocation. Leave arguments empty. Under **Preview arguments and run test**, use **Preview arguments** first, then **Run test** to perform the read.
 
 Argument preview resolves values locally and makes no network call. Run test invokes the selected tool and may change the server's application. A test has a separate cancellation identity and does not publish to the saved action's variables. Closing the inspector cancels its test. Cancellation cannot undo a call already executed by the server.
 
@@ -51,7 +51,9 @@ You can also test without a deck: open **Settings > MCP Connections > Tools**, e
 
 After a tool test in either screen, **Display result as** defaults to **JSON**, showing the full normalized envelope including status, errors and structured data. **Text** shows returned text, with structured data as a fallback if no text is available. Returned markup is displayed literally. Switching views performs no network call and does not change publication settings. Images, audio and resource content are not rendered.
 
-Arguments preserve JSON types. Fixed `false`, `0`, `null`, `""`, an omitted property and an unavailable source have different meanings. Optional arguments are omitted unless included. A literal string does not interpolate variables.
+Arguments preserve JSON types. Fixed `false`, `0`, `null`, `""`, an omitted property and an unavailable source have different meanings. Unused optional arguments collapse to their checkbox, name and description. Click the name or checkbox to include the parameter and reveal its inputs; unchecking removes its fixed value and calculated bindings from the invocation. Re-enabling restores the draft during the same editor session. Excluded drafts are not persisted in the deck. Required parameters stay expanded. A literal string does not interpolate variables.
+
+The editor derives accepted formats from the advertised schema, including `anyOf`, `oneOf`, type arrays and supported local references. A **Value format** selector distinguishes alternatives such as Text and List of text. Enter plain text without JSON quotes; lists of text have Add item/Remove controls. Objects and complex lists retain a JSON editor. An unspecified schema starts in JSON mode and also lets the user select a value format manually; these choices are editing aids, not inferred server restrictions. A permissive schema is not interpreted as a specific type merely from its description. Relevant bounds and server examples appear as hints; the native validator still checks the complete original schema. Invalid JSON prevents argument Preview and Run test until corrected.
 
 The value-source dropdown offers **Fixed** or **Calculated**. Choose Calculated to open the familiar function editor and enter the body of `function calculateValue(value, variables, eventData)`. `value` is `eventData.value` when that property exists (including false, zero and null); otherwise it is the entire event payload. `variables` contains typed server-variable values, with JSONOBJECT values decoded as JSON. `eventData` is the complete event payload. For example, `return variables["desired_target"];` reads a server variable.
 
@@ -87,15 +89,15 @@ MATRIC saves the accepted input and output schemas with the action. If discovery
 
 ## Set slider execution behavior
 
-Calls are asynchronous: later MATRIC actions continue immediately. There is no wait-for-result mode. Queue expiry defaults to five seconds and call timeout to 30 seconds.
+Calls are asynchronous: later MATRIC actions continue immediately. There is no wait-for-result mode. The UI labels these limits **Waiting command expiry** (five seconds) and **Response timeout** (30 seconds), with values shown in seconds. The former discards a command that waits too long before sending; the latter limits waiting for completion. Neither delays later actions. Saved `QueueMaxAgeMs`, `CallTimeoutMs` and `MinIntervalMs` remain integer milliseconds for compatibility.
 
 | Policy | Use it for | Behavior |
 | --- | --- | --- |
-| Ignore while busy | Discrete commands where repeat taps should be ignored | Suppresses another trigger while the saved action is waiting or running |
-| Ordered queue | Relative steps and meaningful transitions | Preserves accepted order in a bounded queue |
-| Latest value | Absolute setters such as volume or brightness | Replaces pending intermediate values and retains one trailing final value |
+| Ignore extra commands (`IgnoreWhileBusy`) | Discrete commands where repeat taps should be ignored | Suppresses another trigger while the saved action is waiting or running |
+| Send commands in order (`Ordered`) | Relative steps and meaningful transitions | Preserves accepted order in a bounded queue |
+| Keep the latest slider value (`LatestValue`) | Absolute setters such as volume or brightness | Replaces pending intermediate values and retains one trailing final value |
 
-For one call on release, enable the slider's **Send value after interaction end** and use Ordered or Ignore while busy. For live absolute updates, disable that setting and use Latest value. Its interval defaults to 200 ms, with a 100 ms minimum. Values remain subject to validation, expiry and cancellation.
+For one call on release, enable the slider's **Send value after interaction end** and use Ordered or Ignore while busy. For live absolute updates, disable that setting and use Latest value. The UI shows **Minimum time between calls (seconds)**, default 0.2 with a 0.1 minimum. Values remain subject to validation, expiry and cancellation.
 
 Auto-reset produces the selected value followed by the default value. Enable send-after-interaction and use Ordered to preserve both. Latest value is rejected for auto-reset sliders and rotary controls. Do not coalesce toggles, relative steps, screenshots or other commands where each input matters. Result-driven control updates do not emit another slider input.
 
@@ -103,43 +105,30 @@ The same saved action shares one execution lane across clients, with at most one
 
 ## Consume results
 
-The action editor shows its stable prefix:
+Enable **Publish returned text to server variables** or **Publish full structured output to server variables**. Each reveals a name input prefilled with its generated default. Edit the name directly. Publication defaults to off; settings and action tests never publish live variables.
 
-```text
-mcp_d<deck ID without hyphens>_a<action instance ID without hyphens>
-```
+Default names use the stable occurrence prefix `mcp_d<deck ID without hyphens>_a<action instance ID without hyphens>` plus `_text` or `_data`. The text variable is STRING; structured output is JSONOBJECT. The latter contains the tool's `structuredContent`, not its entire normalized result envelope, and is null for text-only responses. Failure or a saved configuration change clears unavailable output. These variables are read-only and nonpersistent and use the existing [applet variable updates](../applets/reference.md) and control property bindings.
 
-Suffixes are `_result` (JSON snapshot), `_status` (string), `_busy` (boolean), `_success` (nullable boolean), `_pending_count` and `_sequence` (numbers). Mapped fields use `_field_<key>`. Results are read-only, nonpersistent server variables. They use existing [applet variable updates](../applets/reference.md) and control property bindings; no new UDP API message is required. An integration cannot overwrite or delete these owned values. A generated-name collision with another producer is reported as `variablePublicationError`.
-
-Add this result mapping for the example:
-
-```json
-{"Key":"value","SourcePointer":"/value","ExpectedType":"number","Required":true}
-```
-
-A successful `_result` includes the following fields, with execution metadata such as sequence and client ID:
+The portable action properties are:
 
 ```json
 {
-  "status": "succeeded",
-  "success": true,
-  "outcomeUnknown": false,
-  "fields": {"value": 0.5},
-  "available": {"value": true},
-  "fieldTypes": {"value": "number"},
-  "pendingCount": 0,
-  "suspended": false,
-  "suppressedCount": 0,
-  "lastRejectedInput": null,
-  "variablePublicationError": false
+  "PublishText": true,
+  "TextVariableName": "example_text",
+  "PublishStructuredData": true,
+  "StructuredDataVariableName": "example_data"
 }
 ```
 
-Consume `_result` when several fields must agree: separate convenience variables do not form an atomic read. Check `success`, `available` and field type before displaying state. An optional missing field has value null and availability false; present false or zero remains available. A text-only response can succeed without supplying structured state. Required missing fields or incompatible output types report a contract error.
+Null or absent name properties retain generated defaults. An explicit name must contain 1–200 ASCII letters, digits or underscores and start with a letter or underscore. Names are case-sensitive. Text and structured output need distinct names. A collision with an existing ordinary variable or another MCP action is rejected; MATRIC never overwrites that producer. Choose a different name. Renaming, disabling publication, deleting the action or shutting down clears and releases its previous output names. Changing a display name does not create a new action identity.
 
-Tool `isError` is a failure even when HTTP returned 200. Statuses include `idle`, `queued`, `running`, `succeeded`, `failed`, `timed_out` and `cancelled`. Error envelopes contain a sanitized code and message. Returned text and full structured data are excluded from live variables by default. Explicit publication enables them; mapped fields are published independently. Variables are shared with connected clients, applets and authorized integrations, so select output fields deliberately.
+Default variable names change with copied action/deck identities. Explicit custom names are preserved across copy/Save As and can conflict with the original; rename them before execution. Names derived from a generated prefix and typed references to them are remapped during copying. Literal names inside function bodies are never rewritten.
 
-If a dispatched call times out or is cancelled without a response, `outcomeUnknown` is true. MATRIC suspends the action and discards pending work. Inspect the external application, then use **Resume after reviewing an uncertain outcome** to accept new input. Resume never replays discarded calls. Mutating calls are not automatically retried. Tool annotations such as `readOnlyHint` are advisory and cannot enforce a server's behavior.
+Existing automatic `_result`, `_status`, `_busy`, `_success`, `_pending_count` and `_sequence` variables retain their contracts. `_result` is the coherent normalized snapshot and includes status, pendingCount, suspended, suppressedCount, lastRejectedInput and variablePublicationError. Existing saved `ResultMappings` and `_field_<key>` variables remain supported for compatibility, but the action editor no longer creates or edits them. No new UDP message is required. Prefer the full structured-output variable and calculated bindings for new setups.
+
+MCP `isError` is failure even when HTTP returned 200. A text-only call can succeed without structured data. Returned text and structured data are also included in the canonical envelope only when the corresponding publication option is enabled. Select outputs deliberately: published variables are shared with clients, applets and authorized integrations.
+
+If a dispatched call times out or is cancelled without a response, `outcomeUnknown` is true. MATRIC suspends the action and discards pending work. Inspect the external application, then use **Resume after reviewing an uncertain outcome**. Resume accepts new input without replaying discarded work. Mutating calls are not retried automatically. Read-only annotations remain advisory.
 
 ## Share and troubleshoot
 
