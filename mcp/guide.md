@@ -43,7 +43,7 @@ Tokens and environment overrides are protected for the current Windows account a
 
 ## Configure an action
 
-Create a disposable deck and add **MCP** to a button's press event. Select `Local MCP example`, refresh tools using the small icon beside **Tool** (tooltip **Refresh list**) and choose `get_value`. The Tool dropdown is sorted alphabetically by displayed name. Type part of a title or tool identifier to filter the list, ignoring case, then select a match with the mouse or keyboard. Searching alone neither changes the configured tool nor performs discovery or invocation. Leave arguments empty. Under **Preview arguments and run test**, use **Preview arguments** first, then **Run test** to perform the read.
+Create a disposable deck and add **MCP** to a button's press event. Select `Local MCP example`. If its profile is already connected, opening the action automatically loads the tools through the shared catalog cache. Reopening the action checks the current connection status again. The small icon beside **Tool** (tooltip **Refresh list**) forces discovery when needed. Choose `get_value`. Opening the action never invokes a tool or starts browser sign-in. The Tool dropdown is sorted alphabetically by displayed name. Type part of a title or tool identifier to filter the list, ignoring case, then select a match with the mouse or keyboard. Searching alone neither changes the configured tool nor performs discovery or invocation. Leave arguments empty. Under **Preview arguments and run test**, use **Preview arguments** first, then **Run test** to perform the read.
 
 Argument preview resolves values locally and makes no network call. Run test invokes the selected tool and may change the server's application. A test has a separate cancellation identity and does not publish to the saved action's variables. Closing the inspector cancels its test. Cancellation cannot undo a call already executed by the server.
 
@@ -55,6 +55,8 @@ Arguments preserve JSON types. Fixed `false`, `0`, `null`, `""`, an omitted prop
 
 The editor derives accepted formats from the advertised schema, including `anyOf`, `oneOf`, type arrays and supported local references. A **Value format** selector distinguishes alternatives such as Text and List of text. Enter plain text without JSON quotes; lists of text have Add item/Remove controls. Objects and complex lists retain a JSON editor. An unspecified schema starts in JSON mode and also lets the user select a value format manually; these choices are editing aids, not inferred server restrictions. A permissive schema is not interpreted as a specific type merely from its description. Relevant bounds and server examples appear as hints; the native validator still checks the complete original schema. Invalid JSON prevents argument Preview and Run test until corrected.
 
+**Advanced parameter values** exposes the saved fixed JSON object behind the normal parameter controls, for nested or other complex literal data. For example, a fixed domain produces `{"domain":"light"}`; `{}` means no fixed values are configured. Calculated arguments are applied afterward and override a literal at the same target. Their `ArgumentBindings` representation is managed by the function editor and is no longer exposed as a raw array editor; existing saved bindings still execute unchanged. The separate read-only schema block describes the server's types, required fields and constraints and is never submitted as argument data. Both scrollbar and wheel scrolling are supported without dragging the containing action.
+
 The value-source dropdown offers **Fixed** or **Calculated**. Choose Calculated to open the familiar function editor and enter the body of `function calculateValue(value, variables, eventData)`. `value` is `eventData.value` when that property exists (including false, zero and null); otherwise it is the entire event payload. `variables` contains typed server-variable values, with JSONOBJECT values decoded as JSON. `eventData` is the complete event payload. For example, `return variables["desired_target"];` reads a server variable.
 
 For the example server, this function body converts a slider from 0–100 to 0–1:
@@ -64,6 +66,22 @@ return Math.max(0, Math.min(1, value / 100));
 ```
 
 Click **Test** in the function editor to evaluate locally using your test event JSON and the current server variables. It checks the argument type, and shows the value or error. It never discovers or invokes tools and does not change live result variables. **Save** applies the function; **Cancel** preserves the previous source/body. **Edit function / Test** reopens it. Whole-argument Preview also validates cross-property rules and the full tool input schema. The [runnable calculation example](../examples/mcp/calculations.cjs) uses the same slider function: run `node calculations.cjs` to see sample values.
+
+The **Server variables** browser beside the function editor uses the variable updates already received by MATRIC. Search by variable name, JSON field/path or type. Each row shows its type and a compact current-value preview. Expand an object or array to inspect fields; clicking a name inserts a reference at the cursor, replacing selected text. Keyboard activation works too. References use quoted brackets, such as `variables["light_status"]["brightness"]` or `variables["light_status"]["lights"][0]["name"]`, so spaces, quotes and numeric object keys remain unambiguous. The browser inserts references rather than copying literal values. Undo/Redo work through the editor history.
+
+**Hide variables** gives the editor the full dialog width; **Show variables** restores the panel. Hiding preserves the current script, cursor, search and expanded branches while the dialog stays open. On narrow windows the visible browser stacks below the editor. The same browser is available when testing a tool from MCP Connections.
+
+Large JSON is never rendered in full. Objects start collapsed, scalar previews use at most 120 characters, browsing shows up to 50 children per node, and the panel renders at most 250 rows to a depth of eight. Search inspects at most 2,000 nodes and can find fields beyond the first 50 children. JSON text over 262,144 characters is not parsed; a pass parses at most 1,048,576 characters in total. Very long field names (over 512 characters) are skipped. The browser indicates inspection limits; whole-variable insertion remains available. Invalid JSON text is shown as unavailable JSON with the explanation that calculations receive null. These UI inspection limits do not alter saved values or runtime input limits.
+
+Browser values reflect the latest received update, not a frozen future execution value. Test takes its own current snapshot, and control events freeze their inputs at admission. Browsing, searching, expanding and inserting do not invoke a tool or change live variables. Literal variable references inside saved scripts remain unchanged on copy/Save As and travel with exported decks, so recipients must provide the corresponding variables.
+
+For example, after inserting the brightness field, a numeric argument can use:
+
+```javascript
+return Math.max(0, Math.min(1, variables["light_status"]["brightness"] / 100));
+```
+
+The runnable calculation example includes this variable-based function with a sample input.
 
 The saved binding for this function is:
 
@@ -131,6 +149,14 @@ MCP `isError` is failure even when HTTP returned 200. A text-only call can succe
 If a dispatched call times out or is cancelled without a response, `outcomeUnknown` is true. MATRIC suspends the action and discards pending work. Inspect the external application, then use **Resume after reviewing an uncertain outcome**. Resume accepts new input without replaying discarded work. Mutating calls are not retried automatically. Read-only annotations remain advisory.
 
 ## Share and troubleshoot
+
+Decks containing MCP actions require an MCP-enabled MATRIC importer. Opening a `.deck` file in Windows uses the registered installed executable. Running a newer build from another folder does not change that association; an older installed copy cannot recognize MCP actions. Install the matching MCP-enabled build before importing shared decks. For testing a separate build, invoke that build directly from its folder in PowerShell:
+
+```powershell
+& ".\MatricServer.exe" -i "C:\Decks\example.deck"
+```
+
+This imports into the normal local library and retains the explicit connection-mapping requirement. It does not change Windows file associations.
 
 Save/reopen retains action IDs. Copying controls/pages and Save As generate independent action IDs and remap typed result references within copied controls. Free-form script strings are not rewritten. Save As on the same PC retains explicit local mappings. Exported decks contain action settings, tool contracts and portable requirements, without endpoints, executable profiles or credentials. Import, including replacement, requires explicit mapping to a local connection before execution.
 

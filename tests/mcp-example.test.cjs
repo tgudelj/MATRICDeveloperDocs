@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const {calculateValue} = require('../examples/mcp/calculations.cjs');
+const {calculateValue,calculateFromVariables} = require('../examples/mcp/calculations.cjs');
 const {createServer,createHandler} = require('../examples/mcp/server.cjs');
 
 test('MCP example discovers tools and preserves typed values over JSON and SSE',async t=>{
@@ -28,4 +28,12 @@ test('stdio handler emits no response to notifications and has independent state
 
 test('documented slider function keeps numeric endpoints and clamps overshoot',()=>{
     assert.deepEqual([-20,0,25,50,100,120].map(value=>calculateValue(value,{}, {value})),[0,0,0.25,0.5,1,1]);
+});
+
+test('browser-inserted JSON field reference reads the current typed value without changing the variable',()=>{
+    const variables={light_status:{brightness:65}};
+    assert.equal(calculateFromVariables(null,variables,{}),0.65);
+    variables.light_status.brightness=0;
+    assert.equal(calculateFromVariables(null,variables,{}),0);
+    assert.equal(variables.light_status.brightness,0);
 });
