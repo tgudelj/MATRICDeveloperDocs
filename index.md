@@ -1,6 +1,6 @@
 # Extend MATRIC
 
-Build a small integration, add your own control to a deck, or reuse a supported Stream Deck plugin. You can start with Python or browser JavaScript; you do not need to build MATRIC from source.
+Build a small integration, add your own control to a deck, reuse a supported Stream Deck plugin, or call an MCP tool from a control. You can start with Python or browser JavaScript; you do not need to build MATRIC from source.
 
 ## Choose an extension path
 
@@ -9,10 +9,11 @@ Build a small integration, add your own control to a deck, or reuse a supported 
 | Show game telemetry, update controls, or react to deck interactions from another program | [UDP Integration API](udp/quickstart.md) | A separate process on the MATRIC Windows PC |
 | Create a gauge, dashboard, keypad, or other custom interface inside a deck | [Custom applets](applets/quickstart.md) | An HTML iframe on each client displaying the applet |
 | Use an existing plugin action, or write a plugin using the Stream Deck protocol | [Stream Deck compatibility](stream-deck/guide.md) | A backend on the Windows PC, with an optional configuration window |
+| Call an MCP tool from a button, slider or applet event | [MCP connections and actions](mcp/guide.md) | MATRIC Desktop calls a separately configured MCP server |
 
 **Stream Deck support is experimental.** Compatibility depends on the plugin, version, action and external software it uses. The [combined encoder applet](stream-deck/encoder-applet.md) adds compatible images, built-in and custom encoder layouts, and tap/hold to rotary input. Custom layouts require applet 1.5 and a matching MATRIC Desktop build. Profile switching, Stream Deck deep links, Elgato action/profile import and export, continuous sliders, swipe navigation and special hardware displays remain excluded.
 
-![The three extension paths and where their code runs](assets/extension-paths.svg)
+![UDP, applet and Stream Deck extension paths](assets/extension-paths.svg)
 
 These paths can work together. For example, a Python integration publishes a temperature as a server variable, and an applet draws it as a gauge. Try the [live status recipe](recipes/live-status.md) after your first example.
 
@@ -28,7 +29,7 @@ Names and IDs serve different purposes. A control's **Name** is a developer-assi
 
 ## Follow a short learning path
 
-1. Choose one of the three quickstarts and use a disposable deck.
+1. Choose an extension quickstart and use a disposable deck.
 2. Run the supplied example and check the expected result.
 3. Read that path's reference when you need more than the example.
 4. Follow [sharing and troubleshooting](troubleshooting.md) before distributing your work.
@@ -42,6 +43,8 @@ Names and IDs serve different purposes. A control's **Name** is a developer-assi
 | Applet JavaScript variables | That iframe's memory, unless the applet implements persistence |
 | Stream Deck action settings | Saved action occurrence in the deck; API writes persist immediately |
 | Stream Deck global settings | Shared plugin settings on that MATRIC server |
+| MCP arguments, tool contract and portable requirements | Saved deck; imported decks require explicit local mapping |
+| MCP endpoints, executable profiles and credentials | Local Windows configuration; excluded from deck exports |
 
 Install applets and plugins only from authors you trust. An applet is browser code; a plugin backend can execute native code on the PC. An applet event invokes actions the deck author has explicitly assigned to it.
 
