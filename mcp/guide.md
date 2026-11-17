@@ -25,7 +25,7 @@ Saving and discovery never invoke tools. New profiles are enabled; automatic con
 
 For a real server, use its configured endpoint. HTTP on another machine requires the explicit **Allow insecure HTTP for a remote server** option; use HTTPS when possible. Bearer tokens sent over HTTP are visible to the network. A URL cannot include user information, query strings or fragments. Redirects and invalid TLS certificates are rejected.
 
-**Automatic browser sign-in** is the default. Click **Connect**; if authorization is required, MATRIC discovers the serverÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s OAuth endpoints and opens its login page in your browser. Enter your username/password and any extra verification there, approve access and return to MATRIC. MATRIC protects the resulting access and refresh tokens for your Windows account and can refresh them after restart. It never reads your login password. This flow is generic OAuth authorization code with PKCE; Home AssistantÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s `/api/mcp` supports browser sign-in without manually creating a token.
+**Automatic browser sign-in** is the default. Click **Connect**; if authorization is required, MATRIC discovers the server’s OAuth endpoints and opens its login page in your browser. Enter your username/password and any extra verification there, approve access and return to MATRIC. MATRIC protects the resulting access and refresh tokens for your Windows account and can refresh them after restart. It never reads your login password. This flow is generic OAuth authorization code with PKCE; Home Assistant’s `/api/mcp` supports browser sign-in without manually creating a token.
 
 The connection list shows **Name**, **Status** and **Actions**. One button changes from **Connect** to **Disconnect**. During login it becomes **Cancel sign-in**. Closing MCP Connections cancels its pending login too; an unattended sign-in expires after five minutes. Connecting and signing in only discover tools. Disconnect retains your protected authorization for reconnect. Startup, previews and action execution can reuse/refresh existing credentials, but never open a browser: fresh authorization must start from Connect in Settings.
 
@@ -35,7 +35,7 @@ The connection list shows **Name**, **Status** and **Actions**. One button chang
 - **Manual bearer token**: for a server-issued token. Paste it into the protected password field. Blank retains the stored token; **Clear configured token** removes it. Earlier configured bearer profiles retain manual mode when upgraded.
 - **None**: send no application authentication credentials.
 
-After a 401, use Connect to sign in or review the selected advanced mode. A 403 indicates denied access or insufficient permissions; check the server account and allowed tools. **Forget sign-in** removes local OAuth credentials while keeping the connection profile. For server-side revocation, remove MATRICÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s authorization in the serverÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢s account settings. Editing the endpoint, authentication mode or client registration invalidates cached authorization. Deck exports and imported deck files never contain OAuth credentials.
+After a 401, use Connect to sign in or review the selected advanced mode. A 403 indicates denied access or insufficient permissions; check the server account and allowed tools. **Forget sign-in** removes local OAuth credentials while keeping the connection profile. For server-side revocation, remove MATRIC’s authorization in the server’s account settings. Editing the endpoint, authentication mode or client registration invalidates cached authorization. Deck exports and imported deck files never contain OAuth credentials.
 
 Stdio starts an already installed `.exe` directly. Supply an absolute executable path, a JSON array of argument strings, an optional absolute working directory and optional environment overrides as a JSON object of strings. MATRIC supplies a small standard OS environment plus your overrides. It runs no shell and installs no packages. Disconnect closes the child it started; disconnecting HTTP leaves the independent server running.
 
@@ -61,7 +61,7 @@ The editor derives accepted formats from the advertised schema, including `anyOf
 
 Enter a fixed value directly, or click the **(x)** binding button to the right of the parameter input to open the calculation editor. The symbol lights cyan when a saved binding is active; a calculated input displays **Calculated value** instead of an editable fixed value. Click the lit symbol to edit it. The editor shares its layout, variable browser, Test/result/log display and **Test / Clear / Cancel / Save** actions with text and state bindings. Enter the body of `function calculateValue(value, variables, eventData)`. `value` is `eventData.value` when that property exists (including false, zero and null); otherwise it is the entire event payload. `variables` contains typed server-variable values, with JSONOBJECT values decoded as JSON. `eventData` is the complete event payload. For example, `return variables["desired_target"];` reads a server variable.
 
-For the example server, this function body converts a slider from 0ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“100 to 0ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“1:
+For the example server, this function body converts a slider from 0–100 to 0–1:
 
 ```js
 return Math.max(0, Math.min(1, value / 100));
@@ -146,13 +146,13 @@ The portable action properties are:
 }
 ```
 
-Null or absent name properties retain generated defaults. An explicit name must contain 1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“200 ASCII letters, digits or underscores and start with a letter or underscore. Names are case-sensitive. Text and structured output need distinct names. Multiple MCP actions may publish to the same name when their output types match. The last completed call updates the shared value; a failed call clears it. A text output and structured output cannot share a name because their types differ. Existing ordinary variables and variables owned by other sources remain protected. Renaming, disabling publication or deleting one producer preserves a shared value while another producer remains; removing its last producer or shutting down clears and releases it. Changing a display name does not create a new action identity.
+Null or absent name properties retain generated defaults. An explicit name must contain 1–200 ASCII letters, digits or underscores and start with a letter or underscore. Names are case-sensitive. Text and structured output need distinct names. Multiple MCP actions may publish to the same name when their output types match. The last completed call updates the shared value; a failed call clears it. A text output and structured output cannot share a name because their types differ. Existing ordinary variables and variables owned by other sources remain protected. Renaming, disabling publication or deleting one producer preserves a shared value while another producer remains; removing its last producer or shutting down clears and releases it. Changing a display name does not create a new action identity.
 
 Default variable names change with copied action/deck identities. Explicit custom names are preserved across copy/Save As and intentionally share the original output when types match; rename them if separate values are wanted. Names derived from a generated prefix and typed references to them are remapped during copying. Literal names inside function bodies are never rewritten.
 
 Only explicitly enabled outputs create server variables. Automatic `_result`, `_status`, `_busy`, `_success`, `_pending_count` and `_sequence` diagnostics are no longer published. Existing bindings or integrations using those names must move to an explicitly published output where appropriate. The action properties do not display saved-action status notifications or poll execution status. Settings/tool tests and **Preview arguments and run test** retain their explicit result inspection. There is no replacement broadcast status-variable contract. Existing saved `ResultMappings` and `_field_<key>` variables remain supported for compatibility, but the action editor no longer creates or edits them. No new UDP message is required. Prefer the full structured-output variable and calculated bindings for new setups.
 
-MCP `isError` is failure even when HTTP returned 200. A text-only call can succeed without structured data. Saved-action diagnostics retain returned text and structured data only when the corresponding publication option is enabled; an explicit test can inspect its own returned output. Select outputs deliberately: published variables are shared with clients, applets and authorized integrations.
+MCP `isError` is failure even when HTTP returned 200. A text-only call can succeed without structured data. Omitted and null `outputSchema` both mean no structured-output schema and are equivalent when checking a saved tool contract. Genuine changes to inputs or a declared output schema still require review. Saved-action diagnostics retain returned text and structured data only when the corresponding publication option is enabled; an explicit test can inspect its own returned output. Select outputs deliberately: published variables are shared with clients, applets and authorized integrations.
 
 Timeouts, protocol errors and other failures end that attempt without suspending the action. Later taps and already queued commands may run, subject to their normal policy, expiry, configuration validation and origin lifetime. If a dispatched call times out or is cancelled without a conclusive reply, its local diagnostic has `outcomeUnknown: true`: the command may have run. The status display explains this in plain language. MATRIC does not automatically retry the failed command, and cancellation cannot roll back a remote effect. A received JSON-RPC rejection is reported as `protocol_error` with `outcomeUnknown: false` and leaves a healthy connection ready. Transport failures retain bounded reconnect backoff; a later request waits for that delay within its timeout, without replaying the failed call. Read-only annotations remain advisory.
 
@@ -166,7 +166,11 @@ Decks containing MCP actions require an MCP-enabled MATRIC importer. Opening a `
 
 This imports into the normal local library and retains the explicit connection-mapping requirement. It does not change Windows file associations.
 
-Save/reopen retains action IDs. Copying controls/pages and Save As generate independent action IDs and remap typed result references within copied controls. Free-form script strings are not rewritten. Save As on the same PC retains explicit local mappings. Exported decks contain action settings, tool contracts and portable requirements, without endpoints, executable profiles or credentials. Import, including replacement, requires explicit mapping to a local connection before execution.
+Save/reopen retains action IDs. Copying controls/pages and Save As generate independent action IDs and remap typed result references within copied controls. Free-form script strings are not rewritten. Save As on the same PC retains explicit local mappings. Exported decks contain action settings, tool contracts and portable requirements, without endpoints, executable profiles or credentials. After import, MATRIC asks you to map each required connection to a profile configured on this PC. Select profiles and click **Apply mappings**. Each row applies to all actions sharing its connection key, across every page and control. A deck requiring several connections shows a separate row for each; matching display names do not combine distinct keys. No profile is chosen automatically.
+
+**Configure later** leaves the deck imported and remembers the dismissal for this import. Unmapped actions cannot execute. Finish setup, change connections or clear a mapping under **Deck properties > MCP connections**. Mapping only saves local permissions: it does not connect, open browser sign-in, discover tools or invoke them. Use **Manage connections** to create a profile, then **Refresh** to select it. Profiles and authorizations remain in **Settings > MCP Connections**.
+
+Mappings and review dismissals are local to the installed deck revision. Reimporting or replacing a deck requires a fresh review, even when its deck ID is unchanged. Pending setup is also offered for an unresolved imported deck when the editor starts, so importing while MATRIC is closed is covered. Existing unresolved imports may prompt once when first using this version. Changing a shared mapping cancels pending work for its affected actions; it does not replay commands. Clearing a mapping leaves other connection keys intact. A stale setup form cannot authorize a replacement import.
 
 This version supports tool discovery and calls over Streamable HTTP and stdio, including older initialization negotiation on those transports. Legacy HTTP/SSE-only transport, resources/prompts, server-requested sampling, interactive elicitation and task workflows are excluded. Text is displayed as text. Images, audio and resource content are not rendered. Catalog, JSON size/depth and response limits reject excessive payloads. Use a read-only status tool to verify a real connection before configuring effects.
 
@@ -175,3 +179,16 @@ To test this example from the documentation checkout:
 ```sh
 node --test tests/mcp-example.test.cjs
 ```
+
+
+The portable references retain their existing shape:
+
+```json
+{
+  "McpConnectionRequirements": [
+    {"Key": "overlay", "Name": "NVIDIA Overlay", "Tools": ["nvapp_overlay_get_status"]}
+  ]
+}
+```
+
+Every action using that requirement retains `"ConnectionKey": "overlay"` and its `ConnectionName`, `ToolName` and `ToolSchemaSnapshot`. Selecting a local profile does not rewrite these action fields or add its profile ID, address or credentials to the deck. The same local profile may satisfy more than one key when appropriate. Connection names are labels, not a trusted server identity. Tool availability and argument/schema checks still apply when an action runs. No new UDP message or external applet permission is introduced.
