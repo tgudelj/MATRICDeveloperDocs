@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const {calculateValue,calculateFromVariables} = require('../examples/mcp/calculations.cjs');
+const {calculateValue,calculateFromVariables,calculateEnabled} = require('../examples/mcp/calculations.cjs');
 const {createServer,createHandler} = require('../examples/mcp/server.cjs');
 
 test('MCP example discovers tools and preserves typed values over JSON and SSE',async t=>{
@@ -36,4 +36,9 @@ test('browser-inserted JSON field reference reads the current typed value withou
     variables.light_status.brightness=0;
     assert.equal(calculateFromVariables(null,variables,{}),0);
     assert.equal(variables.light_status.brightness,0);
+});
+
+test('Boolean parameter example returns a Boolean rather than quoted text',()=>{
+    assert.equal(calculateEnabled(null,{},{}),true);
+    assert.equal(typeof calculateEnabled(null,{},{}),'boolean');
 });
