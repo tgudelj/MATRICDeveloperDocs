@@ -41,6 +41,15 @@
       ]
     },
     {
+      "title": "MCP tools",
+      "pages": [
+        {
+          "title": "MCP connections and actions",
+          "path": "mcp/guide.md"
+        }
+      ]
+    },
+    {
       "title": "Stream Deck compatibility",
       "pages": [
         {
