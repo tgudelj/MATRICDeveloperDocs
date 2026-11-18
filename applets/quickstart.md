@@ -61,6 +61,8 @@ The HTML example registers its message listener before requesting state. It reta
 
 Edit the installed files, then choose **Reload applet** in control properties. Reopen the deck on the client if it still shows old content. Ordinary resizing and parameter changes do not reload the iframe, so respond to updates in your code.
 
+In the WPF Windows client **development preview**, the native **Reload** command clears the client's HTTP resource cache before reloading the deck. This can refresh stale applet scripts, styles and images. Cookies and DOM storage, including local storage and applet-managed CacheStorage, are preserved. The iframe is recreated, so keep any state needed after reload outside transient JavaScript variables and handle the usual initialization messages again. This preview behavior is not a change to the released MAUI client or the editor's **Reload applet** command.
+
 Keep `AppletId` stable for compatible updates. Selecting a different applet resets the container's parameters and event actions. Continue with the [applet reference](reference.md) for more parameter types, event data and packaging.
 
 Before designing a larger interface, read [Size and lay out an applet](layout.md). Container proportions and pixel dimensions depend on the deck layout; HTML is not automatically scaled to fit.
