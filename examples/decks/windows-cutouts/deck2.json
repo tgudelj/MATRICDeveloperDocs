@@ -1,0 +1,68 @@
+{
+  "Id": "1fdc513b-0106-4a7e-b8c7-d4a530deb3e9",
+  "Title": "Windows cutout preview",
+  "Author": "The MATRIC Team",
+  "Description": "Development preview of PNG window cutouts for the WPF Windows client on a landscape desktop. Requires matching development server and client builds.",
+  "DeckFileVersion": 3,
+  "DefaultPageId": "d60466f0-380e-47bd-a533-234026ea3c24",
+  "ReferencedUserVariables": [],
+  "Pages": [
+    {
+      "Id": "d60466f0-380e-47bd-a533-234026ea3c24",
+      "Title": "Main",
+      "Cols": 3,
+      "Rows": 2,
+      "BackgroundColor": "#222222",
+      "BackgroundImage": null,
+      "BackgroundSize": "cover",
+      "Controls": [
+        {
+          "Id": "b9f8ef97-d97e-42c0-ae88-1a5612781fd8",
+          "ControlTypeName": "EXM.MatricPro.Controls.MCTransparency",
+          "ControlConfigTypeName": "EXM.MatricPro.Controls.Config.MCTransparencyConfig",
+          "Text": "",
+          "X": 0,
+          "Y": 0,
+          "Width": 2,
+          "Height": 2,
+          "ControlEvents": [],
+          "Config": {
+            "ControlBindings": [],
+            "FileResources": [
+              "panel.png"
+            ],
+            "BackgroundImage": "panel.png",
+            "BackgroundColor": "transparent",
+            "AdditionalResources": {},
+            "Padding": 0
+          }
+        },
+        {
+          "Id": "734df0ec-7646-4b43-be6a-09966f41a1b4",
+          "ControlTypeName": "EXM.MatricPro.Controls.MCButton",
+          "ControlConfigTypeName": "EXM.MatricPro.Controls.Config.MCButtonConfig",
+          "Text": "Button",
+          "X": 2,
+          "Y": 0,
+          "Width": 1,
+          "Height": 1,
+          "ControlEvents": [],
+          "Config": {
+            "Valign": "mid",
+            "FontFace": "text",
+            "BackgroundColor": "#3d3d3d",
+            "TextColor": "#ffffff",
+            "BackgroundColorActive": "#00b6b6",
+            "TextSize": 18,
+            "TextColorActive": "#ffffff",
+            "Halign": "center",
+            "AdditionalResources": {},
+            "ControlBindings": [],
+            "Padding": 0,
+            "FileResources": []
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -63,6 +63,15 @@
       ]
     },
     {
+      "title": "Deck controls",
+      "pages": [
+        {
+          "title": "Windows cutouts (preview)",
+          "path": "decks/windows-cutouts.md"
+        }
+      ]
+    },
+    {
       "title": "Recipes",
       "pages": [
         {

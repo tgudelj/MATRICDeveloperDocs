@@ -11,6 +11,13 @@ const site = path.join(root, '_site');
 const prefix = '/';
 let server, browser, origin;
 
+test('cutout preview guide downloads its unchanged flat example deck',async t=>{
+  const page=await open(t,'decks/windows-cutouts/');
+  await page.locator('main h1').filter({hasText:'Windows window cutouts (development preview)'}).waitFor();
+  const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('link',{name:'preview example deck',exact:true}).click()]);
+  assert.deepEqual(await fs.promises.readFile(await download.path()),fs.readFileSync(path.join(root,'examples/decks/windows-cutouts.deck')));
+});
+
 test('encoder guide and self-contained applet download are published',async t=>{
   const page=await open(t,'stream-deck/encoder-applet/');
   await page.locator('main h1').filter({hasText:'Plugin touch strip and rotary'}).waitFor();

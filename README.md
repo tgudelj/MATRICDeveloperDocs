@@ -16,6 +16,7 @@ Start with [Extend MATRIC](index.md) to choose the right extension path.
 | Reuse or write a supported Stream Deck plugin | [Stream Deck compatibility](stream-deck/guide.md) |
 | Display external data in an applet | [Live status recipe](recipes/live-status.md) |
 | Share an extension or solve a problem | [Sharing and troubleshooting](troubleshooting.md) |
+| Define PNG window holes in the WPF development client | [Windows cutouts (development preview)](decks/windows-cutouts.md) |
 
 **Stream Deck plugin support is experimental.** Compatibility varies by plugin, version and action. The [combined encoder applet](stream-deck/encoder-applet.md) supports compatible images, built-in and custom encoder layouts, and tap/hold alongside rotary input. Custom layouts require applet 1.5 and a matching MATRIC Desktop build. Profile switching, Stream Deck deep links, Elgato action/profile import and export, continuous sliders, swipe navigation and special hardware screens remain excluded.
 

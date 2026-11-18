@@ -29,6 +29,8 @@ python tools/check-docs.py
 
 The package is generated from the five starter source files with stable metadata. Commit both the source changes and the updated `.mapl`.
 
+The Windows cutout preview uses flat source files under `examples/decks/windows-cutouts`. Run `python tools/package-cutout.py` after edits and `python tools/package-cutout.py --check` to verify its synchronized `.deck`, non-overlapping geometry and PNG limits. This example requires matching development builds; do not describe it as available in the current production server/client.
+
 For the combined encoder source under `examples/applets/matric-plugin-encoder`, run `python tools/package-encoder.py` after edits. Keep it synchronized with the matching built-in applet and commit its `.mapl` alongside the four source files. `check-docs.py` verifies both packages.
 
 ## Run starter browser checks
