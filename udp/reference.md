@@ -35,6 +35,8 @@ All examples below show fields to add to the common envelope.
 
 Use a specific client ID when experimenting. `SETVARIABLES` is server-wide; `clientId` does not scope variables to a device. This command set does not enumerate decks/pages, edit action bindings, or provide a general action-execution command.
 
+**WPF Windows client development preview:** the client remembers the deck and page actually displayed, including successful `SETDECK` and `SETACTIVEPAGE` changes. Reload restores that selection; startup restores it when reconnect is enabled. With the updated server renderer, this includes empty pages. With the released 2.9.21 renderer, remembered page changes require a page containing at least one control. Other clients retain their platform behavior. This preview adds no UDP fields or success acknowledgement; an invalid request is not proof that a client changed its displayed content.
+
 ### Button properties
 
 ```json
