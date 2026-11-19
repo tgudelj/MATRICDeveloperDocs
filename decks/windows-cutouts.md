@@ -14,14 +14,22 @@ A **Transparency** control reserves a normal rectangle in the deck grid. Choose 
 
 Use the control image for both the artwork and its mask. A page background scales separately and does not define holes. Nonzero alpha, including partially transparent edge pixels, keeps the native window intact. There is no color-key setting, soft desktop transparency, rotation or overlapping-control mode in this preview.
 
-Clearing the image removes that control's holes. Missing, invalid or unsupported resources keep the window intact. Native mask-loading failures appear in the WPF client's status and diagnostics. Page/deck changes, renderer navigation, disconnect and hidden windows clear stale holes. The native toolbar remains outside the cutout area so Settings, Reload and Close remain reachable.
+Clearing the image removes that control's holes. Missing, invalid or unsupported resources keep the window intact. Native mask-loading failures appear in the WPF client's status and diagnostics. Page/deck changes, renderer navigation, disconnect and hidden windows clear stale holes. In windowed presentation, the native toolbar stays outside the cutout area so Settings, Reload and Close remain reachable.
+
+## Full screen and borderless windows
+
+Choose **Immersive mode** in the WPF client's deck toolbar to fill the current monitor. The deck toolbar and status area disappear; **Exit full screen** remains visible above the deck, including when an image-defined hole falls beneath it. The renderer fits the new viewport and the native holes follow the resized controls. Leaving full screen restores the previous window size, position and state.
+
+**Use a borderless deck window** in Settings independently removes the ordinary Windows frame in windowed presentation. It retains the deck toolbar and resize grip. Full screen does not change this saved preference. Use **Keep deck above other windows** separately when the overlay should remain visible while interacting with the application below it.
+
+Custom applets should respond to ordinary size updates when entering or leaving full screen. This is a client presentation change; deck coordinates, non-overlap rules and integration messages remain unchanged.
 
 ## Compatibility and limits
 
 - Clients using the updated shared renderer without native cutout support display the PNG as ordinary artwork. They do not provide click-through holes. Older server renderers do not understand the new control.
 - Use a flat PNG filename beside `deck2.json`, such as `panel.png`. External URLs, data URLs, SVGs and nested resource paths cannot define native holes.
 - Each PNG is limited to **8 MiB encoded** and **16,777,216 decoded pixels**. The active page has a **64 MiB decoded-image budget**, up to **128 cutout controls**, and **16,777,216 sampled physical pixels** across their rectangles.
-- Native geometry is limited to **16,384 merged rectangles**. Very noisy masks, such as checkerboards of individual transparent pixels, may exceed that limit. Use clean, solid transparent areas. A failed page update leaves a rectangular window.
+- Native geometry is limited to **16,384 merged rectangles**, with a maximum sampled width or height of **16,384 physical pixels** per control. Very noisy masks, such as checkerboards of individual transparent pixels, may exceed the rectangle limit. Use clean, solid transparent areas. A failed page update leaves a rectangular window.
 - Images follow the control's current rendered bounds, browser scaling and viewport clipping. Normal Save As, page/control copying, export and import carry the image through MATRIC's resource lifecycle.
 - Mouse click-through, resizing, movement, native dialogs and deck/disconnect cleanup have been checked with the WPF development client. Touch/multitouch and transitions between different monitor DPI settings still require hardware validation.
 
