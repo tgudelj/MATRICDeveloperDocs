@@ -1,14 +1,14 @@
 # Windows window cutouts (development preview)
 
-This feature requires matching development builds of MATRIC Desktop and the new WPF Windows client. It is **not included in the released MATRIC 2.9.21 server or the existing MAUI client**. Keep the example in an isolated development deck collection until those builds are available.
+This feature requires MATRIC Desktop **2.9.22 or later** and the matching WPF Windows development client. The existing Microsoft Store Windows client does not provide window holes. Keep the example in an isolated development deck collection until those builds are available.
 
-A **Transparency** control reserves a normal rectangle in the deck grid. Choose its PNG image in the control properties. The image stretches to fill that rectangle; pixels with alpha **exactly zero** create holes through the Windows client window. You can see and click the application underneath through those holes. The PNG's remaining pixels display its artwork.
+A **Transparency** control reserves a normal rectangle in the deck grid. Choose a PNG or static SVG image in the control properties. The image stretches to fill that rectangle; areas with alpha **exactly zero** create holes through the Windows client window. You can see and click the application underneath through those holes. The remaining areas display the artwork.
 
 ## Author a cutout
 
-1. Drag the Transparency template from **Control templates → Windows cutouts** into the editor.
+1. Drag the Transparency template from **Control templates → Other** into the editor. Its supplied SVG frame has a transparent centre; replace it with your own artwork if needed.
 2. Move and resize it using the ordinary grid handles. Other controls cannot overlap its reserved rectangle, including the parts that will become holes.
-3. Select a PNG in its properties. The editor uses a checkerboard preview and remains a normal editor window.
+3. Select a PNG or static SVG in its properties. The editor uses a checkerboard preview and remains a normal editor window.
 4. Save the deck and open it in the WPF Windows client. Several Transparency controls can contribute separate holes.
 5. Use **Keep deck above other windows** when the panel should stay visible over another application. **No focus** preserves that application's keyboard focus when using the deck. Settings and other native dialogs temporarily restore the rectangular window.
 
@@ -26,16 +26,17 @@ Custom applets should respond to ordinary size updates when entering or leaving 
 
 ## Compatibility and limits
 
-- Clients using the updated shared renderer without native cutout support display the PNG as ordinary artwork. They do not provide click-through holes. Older server renderers do not understand the new control.
-- Use a flat PNG filename beside `deck2.json`, such as `panel.png`. External URLs, data URLs, SVGs and nested resource paths cannot define native holes.
-- Each PNG is limited to **8 MiB encoded** and **16,777,216 decoded pixels**. The active page has a **64 MiB decoded-image budget**, up to **128 cutout controls**, and **16,777,216 sampled physical pixels** across their rectangles.
+- Clients using the updated shared renderer without native cutout support display the image as ordinary artwork. They do not provide click-through holes. Older server renderers do not understand the new control.
+- Use a flat PNG or SVG filename beside `deck2.json`, such as `panel.png` or `panel.svg`. External URLs, data URLs and nested resource paths cannot define native holes.
+- Use a static, self-contained SVG with embedded artwork. Scripts, embedded web pages, animation and document type declarations are unsupported. External SVG images, fonts and styles are not loaded. The WPF client converts SVG artwork at the control's current physical size, so resizing refreshes the vector mask. Fully transparent areas create holes; anti-aliased or partly transparent edges remain in the window.
+- Each source image is limited to **8 MiB encoded**. PNGs and rasterized SVG masks have a limit of **16,777,216 decoded pixels**; converted PNG masks must also fit the 8 MiB encoded limit. The active page has a **64 MiB decoded-image budget**, up to **128 cutout controls**, and **16,777,216 sampled physical pixels** across their rectangles.
 - Native geometry is limited to **16,384 merged rectangles**, with a maximum sampled width or height of **16,384 physical pixels** per control. Very noisy masks, such as checkerboards of individual transparent pixels, may exceed the rectangle limit. Use clean, solid transparent areas. A failed page update leaves a rectangular window.
 - Images follow the control's current rendered bounds, browser scaling and viewport clipping. Normal Save As, page/control copying, export and import carry the image through MATRIC's resource lifecycle.
 - Mouse click-through, resizing, movement, native dialogs and deck/disconnect cleanup have been checked with the WPF development client. Touch/multitouch and transitions between different monitor DPI settings still require hardware validation.
 
 ## Example and file contract
 
-The [preview example deck](../examples/decks/windows-cutouts.deck) contains one non-overlapping cutout rectangle and an ordinary harmless button. Its editable source is [deck2.json](../examples/decks/windows-cutouts/deck2.json) and [panel.png](../examples/decks/windows-cutouts/panel.png). It sends no keyboard, mouse or integration actions. Import it only in the matching development server. Use **Save As** to give a personal copy independent deck/page/control identities.
+The [preview example deck](../examples/decks/windows-cutouts.deck) contains separate PNG and SVG pages, each with one non-overlapping cutout rectangle and an ordinary harmless button. Its editable source is [deck2.json](../examples/decks/windows-cutouts/deck2.json), [panel.png](../examples/decks/windows-cutouts/panel.png) and [panel.svg](../examples/decks/windows-cutouts/panel.svg). It sends no keyboard, mouse or integration actions. Import it only in the matching development server. Use **Save As** to give a personal copy independent deck/page/control identities.
 
 The serialized control uses these fields inside the page's `Controls` array:
 
@@ -62,3 +63,5 @@ The serialized control uses these fields inside the page's `Controls` array:
 ```
 
 `X`, `Y`, `Width` and `Height` are ordinary whole grid cells. The control has no action events. `BackgroundImage` uses the existing resource ownership rules; `FileResources` records the referenced image. Do not add another interactive control over its footprint. This is a deck control, not a custom applet, and it does not add UDP Integration API messages.
+
+For SVG artwork, set `BackgroundImage` to `panel.svg` and `FileResources` to `["panel.svg"]`. The optional version 1 cutout layout message still carries the same revision-qualified `imageUrl` and reserved bounds for either image format. Existing `MATRIC.capabilities.windowCutouts === 1` detection is unchanged.
