@@ -8,6 +8,8 @@ For a complete working starting point, [copy the starter applet](starter.md). It
 
 Control width and height are measured in square grid cells. A container 6 cells wide and 3 cells high is approximately **2:1**, subject to pixel rounding. Its pixel size depends on the deck grid and the space available on the device. The editor preview can have different pixel dimensions from the client.
 
+Starting with MATRIC Desktop **2.9.23**, Page Properties accepts **1–200 columns and 1–200 rows**. These grid dimensions affect placement precision; applets still receive their available size in CSS pixels through `RESIZE`.
+
 The manifest has no preferred width, minimum size or required aspect-ratio field. Describe your recommended proportions and smallest usable size in the applet's instructions; the deck author chooses the container dimensions.
 
 Inside the iframe, CSS viewport units and viewport media queries refer to that iframe's viewport. `100vw` means the applet width, not the whole phone width. Dimensions reported by `RESIZE` are **CSS pixels**, not physical display pixels.
