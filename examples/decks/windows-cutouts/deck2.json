@@ -2,7 +2,7 @@
   "Id": "1fdc513b-0106-4a7e-b8c7-d4a530deb3e9",
   "Title": "Windows cutout preview",
   "Author": "The MATRIC Team",
-  "Description": "Development preview of PNG and SVG window cutouts for the WPF Windows client. Requires MATRIC Desktop 2.9.22 or later and the matching Windows development client.",
+  "Description": "Development preview of PNG and SVG cutout image scaling. Requires MATRIC Desktop 2.9.24 and the matching WPF Windows development client.",
   "DeckFileVersion": 3,
   "DefaultPageId": "d60466f0-380e-47bd-a533-234026ea3c24",
   "ReferencedUserVariables": [],
@@ -24,7 +24,7 @@
           "X": 0,
           "Y": 0,
           "Width": 2,
-          "Height": 2,
+          "Height": 1,
           "ControlEvents": [],
           "Config": {
             "ControlBindings": [],
@@ -34,7 +34,8 @@
             "BackgroundImage": "panel.png",
             "BackgroundColor": "transparent",
             "AdditionalResources": {},
-            "Padding": 0
+            "Padding": 0,
+            "ImageScaling": "fill"
           }
         },
         {
@@ -81,7 +82,7 @@
           "X": 0,
           "Y": 0,
           "Width": 2,
-          "Height": 2,
+          "Height": 1,
           "ControlEvents": [],
           "Config": {
             "ControlBindings": [],
@@ -91,7 +92,8 @@
             "BackgroundImage": "panel.svg",
             "BackgroundColor": "transparent",
             "AdditionalResources": {},
-            "Padding": 0
+            "Padding": 0,
+            "ImageScaling": "contain"
           }
         },
         {

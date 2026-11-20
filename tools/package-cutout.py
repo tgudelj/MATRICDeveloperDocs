@@ -19,7 +19,7 @@ def main():
     args = parser.parse_args()
     deck = json.loads((SOURCE / "deck2.json").read_text(encoding="utf-8"))
     assert deck["DeckFileVersion"] == 3 and len(deck["Pages"]) == 2
-    for page, image in zip(deck["Pages"], ("panel.png", "panel.svg")):
+    for page, image, scaling in zip(deck["Pages"], ("panel.png", "panel.svg"), ("fill", "contain")):
         assert 1 <= page["Cols"] <= 80 and 1 <= page["Rows"] <= 80
         controls = page["Controls"]
         for index, control in enumerate(controls):
@@ -30,6 +30,8 @@ def main():
             for other in controls[index + 1:]:
                 assert not (x < other["X"] + other["Width"] and other["X"] < x + w and y < other["Y"] + other["Height"] and other["Y"] < y + h)
         assert controls[0]["Config"]["BackgroundImage"] == image
+        assert controls[0]["Config"]["ImageScaling"] == scaling
+        assert controls[0]["Width"] == 2 and controls[0]["Height"] == 1
         assert controls[0]["Config"]["FileResources"] == [image]
     png = (SOURCE / "panel.png").read_bytes()
     assert png[:8] == b"\x89PNG\r\n\x1a\n" and len(png) <= 8 * 1024 * 1024
